@@ -5,17 +5,17 @@ external classtype;
 export all;
 
 external Rapl read_energies();
-    #pragma effect World::TheWorld
+    //#pragma effect World::TheWorld
     #pragma linkname "read_energies"
     #pragma linkobj "src/rapl.o"
     #pragma linksign [1]
 
 external void update_energies(Rapl &rapl);
-    #pragma effect World::TheWorld
+    //#pragma effect World::TheWorld
     #pragma linkname "update_energies"
     #pragma linkobj "src/rapl.o"
 
 external void print_energies(Rapl &rapl);
-    #pragma effect World::TheWorld
+    //#pragma effect World::TheWorld
     #pragma linkname "print_energies"
     #pragma linkobj "src/rapl.o"

@@ -24,7 +24,8 @@ static long long read_energy(int package_id)
     }
 
     long long energy;
-    fscanf(fp, "%lld", &energy);
+    int res = fscanf(fp, "%lld", &energy);
+    assert(res > 0);
     fclose(fp);
 
     return energy;

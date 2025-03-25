@@ -1,6 +1,8 @@
 INCLUDE ("${CMAKE_SOURCE_DIR}/cmake-common/sac2c-variables.cmake")
 INCLUDE ("${CMAKE_SOURCE_DIR}/cmake-common/generate-sac2c-dependency-targets.cmake")
 
+ADD_CUSTOM_TARGET (${TARGET}-all-modules ALL)
+
 # C files
 SET (C_DEPS_SRC
     src/rapl.c
@@ -17,7 +19,6 @@ FOREACH (name ${C_DEPS_SRC})
     SET (src "${CMAKE_CURRENT_SOURCE_DIR}/${name}")
 
     GET_FILENAME_COMPONENT (dir ${name} DIRECTORY)
-
     GET_FILENAME_COMPONENT (dst ${name} NAME_WE)
     SET (dst "${CMAKE_CURRENT_BINARY_DIR}/${dir}/${dst}${OBJEXT}")
 
@@ -30,7 +31,7 @@ FOREACH (name ${C_DEPS_SRC})
         IMPLICIT_DEPENDS C "${src}"
         COMMAND ${SAC2C} -v0 -noprelude -cc ccmod -o "${dst}" "${src}"
         WORKING_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}/${dir}"
-        COMMENT "Generating ${dst} from ${src}")
+        COMMENT "Generating ${dst} from ${src} for target ${TARGET}")
 ENDFOREACH ()
 
 # Make a directory for sac2c output
@@ -47,11 +48,8 @@ FOREACH (name ${SAC_SRC})
     SET (tree "${DLL_BUILD_DIR}/tree/${TARGET_ENV}/${SBI}/lib${dst}Tree${VARIANT}${TREE_DLLEXT}")
 
     RESOLVE_SAC_DEPS_AS_TARGETS ("${name}" "<TARGET>-module-<NAME>" target_list object_list source_list)
-    MESSAGE ("Targets of ${name} => ${target_list}")
-    MESSAGE ("Objects of ${name} => ${object_list}")
-    MESSAGE ("Sources of ${name} => ${source_list}")
-
     LIST (APPEND deps_list ${target_list} ${object_list} ${source_list})
+    MESSAGE (DEBUG "Dependencies of ${name} are: ${deps_list}")
     UNSET (target_list)
     UNSET (object_list)
     UNSET (source_list)
@@ -60,6 +58,7 @@ FOREACH (name ${SAC_SRC})
     FILE (MAKE_DIRECTORY "${dir}")
 
     ADD_CUSTOM_TARGET (${TARGET}-module-${dst} DEPENDS "${mod}" "${tree}")
+    ADD_DEPENDENCIES (${TARGET}-all-modules ${TARGET}-module-${dst})
 
     ADD_CUSTOM_COMMAND (
         OUTPUT ${mod} ${tree}
