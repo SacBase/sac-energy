@@ -21,13 +21,9 @@ jobs:
           sac2c -V
       - name: Install stdlib-basic
         run: |
-          wget ${BASE_URL}/Ubl22/stdlib-basic.pkg
+          wget ${BASE_URL}/Ubl22/stdlib-basic.deb
           sudo apt install ./stdlib-basic.deb
           ls $HOME/.sac2crc
-      - name: Create build dir
-        run: |
-          cmake -E make_directory ${{runner.workspace}}/build
-          mkdir $HOME/.sac2crc
       - name: Configure build-system
         shell: bash
         working-directory: ${{runner.workspace}}/build
@@ -58,16 +54,12 @@ jobs:
       - name: Install stdlib-basic
         run: |
           wget ${BASE_URL}/MacOS_x86/stdlib-basic.pkg
-          sudo installer -pkg ./stdlib-basic.pkg -target /
+          sudo installer -pkg ./stdlib-basic.pkg -target $HOME
           ls $HOME/.sac2crc
       - name: Set XCode version
         uses: maxim-lobanov/setup-xcode@v1
         with:
           xcode-version: '14.2'
-      - name: Create build dir
-        run: |
-          cmake -E make_directory ${{runner.workspace}}/build
-          mkdir $HOME/.sac2crc
       - name: Configure build-system
         shell: bash
         working-directory: ${{runner.workspace}}/build
@@ -93,21 +85,17 @@ jobs:
       - name: Install sac2c-basic
         run: |
           wget ${BASE_URL}/MacOS_arm64/sac2c-basic.pkg
-          sudo installer -pkg ./sac2c-basic.pkg -target /
+          sudo installer -pkg ./sac2c-basic.pkg -target $HOME
           sac2c -V
       - name: Install stdlib-basic
         run: |
           wget ${BASE_URL}/MacOS_arm64/stdlib-basic.pkg
-          sudo installer -pkg ./stdlib-basic.pkg -target /
+          sudo installer -pkg ./stdlib-basic.pkg -target $HOME
           ls $HOME/.sac2crc
       - name: Set XCode version
         uses: maxim-lobanov/setup-xcode@v1
         with:
           xcode-version: '16.2'
-      - name: Create build dir
-        run: |
-          cmake -E make_directory ${{runner.workspace}}/build
-          mkdir $HOME/.sac2crc
       - name: Configure build-system
         shell: bash
         working-directory: ${{runner.workspace}}/build
