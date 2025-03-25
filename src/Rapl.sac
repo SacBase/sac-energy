@@ -1,8 +1,8 @@
 class Rapl;
 
-use Terminal: { TheTerminal };
-
 external classtype;
+
+use Terminal: { TheTerminal };
 
 export all;
 
@@ -33,7 +33,7 @@ void rapl_reset()
 }
 
 external void rapl_print(Rapl &rapl);
-    #pragma effect TheTerminal;
+    #pragma effect TheTerminal
     #pragma linkname "rapl_reset"
     #pragma linkobj "src/rapl.o"
 
