@@ -1,19 +1,17 @@
-use Rapl: all;
-
 noinline
-int test(Rapl &rapl)
+int test()
 {
     return Array::sum(Array::iota([1000,1000,100]));
 }
 
 int main()
 {
-    rapl = read_energies();
+    Rapl::rapl_reset();
 
-    StdIO::print(test(rapl));
+    StdIO::print(test());
 
-    update_energies(rapl);
-    print_energies(rapl);
+    elapsed = Rapl::rapl_elapsed();
+    StdIO::print(elapsed);
 
     return 0;
 }

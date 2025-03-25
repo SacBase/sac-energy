@@ -1,21 +1,43 @@
 class Rapl;
 
+use Terminal: { TheTerminal };
+
 external classtype;
 
 export all;
 
-external Rapl read_energies();
-    //#pragma effect World::TheWorld
-    #pragma linkname "read_energies"
+objdef Rapl raplObj = rapl_init();
+
+external Rapl rapl_init();
+    #pragma linkname "rapl_init"
     #pragma linkobj "src/rapl.o"
     #pragma linksign [1]
 
-external void update_energies(Rapl &rapl);
-    //#pragma effect World::TheWorld
-    #pragma linkname "update_energies"
+external longlong[64] rapl_elapsed(Rapl &rapl);
+    #pragma linkname "rapl_elapsed"
+    #pragma linkobj "src/rapl.o"
+    #pragma linksign [1,2]
+
+longlong[64] rapl_elapsed()
+{
+    return rapl_elapsed(raplObj);
+}
+
+external void rapl_reset(Rapl &rapl);
+    #pragma linkname "rapl_reset"
     #pragma linkobj "src/rapl.o"
 
-external void print_energies(Rapl &rapl);
-    //#pragma effect World::TheWorld
-    #pragma linkname "print_energies"
+void rapl_reset()
+{
+    rapl_reset(raplObj);
+}
+
+external void rapl_print(Rapl &rapl);
+    #pragma effect TheTerminal;
+    #pragma linkname "rapl_reset"
     #pragma linkobj "src/rapl.o"
+
+void rapl_print()
+{
+    rapl_print(raplObj);
+}
