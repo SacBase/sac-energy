@@ -10,7 +10,7 @@ SET (TARGETS    seq seq_checks mt_pth CACHE STRING "Build for these targets")
 SET (SAC2C_EXEC                       CACHE STRING "Path to sac2c compiler")
 
 # Check whether sac2c is operational
-INCLUDE ("cmake-common/FindSAC.cmake")
+LIST (APPEND CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake-common")
 INCLUDE ("cmake-common/check-sac2c.cmake")
 INCLUDE ("cmake-common/misc-macros.cmake")
 
