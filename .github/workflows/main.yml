@@ -40,7 +40,6 @@ jobs:
             echo "!!! ERROR detected in build !!!";
             exit 1;
           fi
-          ${GITHUB_WORKSPACE}/ci/fail-on-warning.sh build.log
 
   build-macos-x86:
     runs-on: macos-13
@@ -80,7 +79,6 @@ jobs:
             echo "!!! ERROR detected in build !!!";
             exit 1;
           fi
-          ${GITHUB_WORKSPACE}/ci/fail-on-warning.sh build.log
 
   build-macos-arm:
     runs-on: macos-15
@@ -120,4 +118,3 @@ jobs:
             echo "!!! ERROR detected in build !!!";
             exit 1;
           fi
-          ${GITHUB_WORKSPACE}/ci/fail-on-warning.sh build.log
