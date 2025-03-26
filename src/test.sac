@@ -6,12 +6,11 @@ int test()
 
 int main()
 {
-    Rapl::rapl_reset();
+    Rapl::rapl_start();
 
     StdIO::print(test());
 
-    elapsed = Rapl::rapl_elapsed();
-    StdIO::print(elapsed);
+    Rapl::rapl_end();
 
     return 0;
 }

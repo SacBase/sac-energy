@@ -2,42 +2,26 @@ class Rapl;
 
 external classtype;
 
-use Terminal: { TheTerminal };
-
 export all;
 
-objdef Rapl raplObj = rapl_init();
+objdef Rapl raplStart = rapl_init();
 
 external Rapl rapl_init();
-    #pragma linkname "rapl_init"
     #pragma linkobj "src/rapl.o"
     #pragma linksign [1]
 
-external longlong[64] rapl_elapsed(Rapl &rapl);
-    #pragma linkname "rapl_elapsed"
+external void rapl_start(Rapl &rapl);
     #pragma linkobj "src/rapl.o"
-    #pragma linksign [1,2]
 
-longlong[64] rapl_elapsed()
+external void rapl_end(Rapl &rapl);
+    #pragma linkobj "src/rapl.o"
+
+void rapl_start()
 {
-    return rapl_elapsed(raplObj);
+    rapl_start(raplStart);
 }
 
-external void rapl_reset(Rapl &rapl);
-    #pragma linkname "rapl_reset"
-    #pragma linkobj "src/rapl.o"
-
-void rapl_reset()
+void rapl_end()
 {
-    rapl_reset(raplObj);
-}
-
-external void rapl_print(Rapl &rapl);
-    #pragma effect TheTerminal
-    #pragma linkname "rapl_reset"
-    #pragma linkobj "src/rapl.o"
-
-void rapl_print()
-{
-    rapl_print(raplObj);
+    rapl_end(raplStart);
 }

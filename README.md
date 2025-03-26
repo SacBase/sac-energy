@@ -2,16 +2,13 @@
 
 Measuring the energy consumption (nanoJoules) of SaC programs through RAPL.
 
-## Build
+## Manual Build
 
-The project uses `cmake-common`, and so upon cloning this repo
-it is important you call this before running cmake:
+The project uses the `cmake-common` submodule, and so upon cloning this
+repository it is important that you first initialize submodules.
 
 ```
 git submodule update --init --recursive
-```
-
-```
 cmake -B build
 cmake --build build
 ```
