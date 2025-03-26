@@ -4,7 +4,7 @@ external classtype;
 
 export all;
 
-objdef Rapl raplStart = rapl_init();
+objdef Rapl raplObj = rapl_init();
 
 external Rapl rapl_init();
     #pragma linkobj "src/rapl.o"
@@ -18,10 +18,10 @@ external void rapl_end(Rapl &rapl);
 
 void rapl_start()
 {
-    rapl_start(raplStart);
+    rapl_start(raplObj);
 }
 
 void rapl_end()
 {
-    rapl_end(raplStart);
+    rapl_end(raplObj);
 }
