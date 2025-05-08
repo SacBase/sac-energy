@@ -47,7 +47,7 @@ SACarg *raplStart(void)
     return SACARGcreateFromPointer (SACTYPE__MAIN__longlong, (void *)packages, 1, num_packages);
 }
 
-SACarg *raplEnd(SACarg *start)
+SACarg *raplStop(SACarg *start)
 {
     int num_packages = SACARGgetShape (start, 0);
     const long long *start_data = (const long long *)SACARGgetSharedData (SACTYPE__MAIN__longlong, start);

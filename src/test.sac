@@ -1,18 +1,5 @@
-use Rapl: all;
-
-inline int +(int a, int b) { return _add_SxS_(a, b); }
-
-int sum(int[d:shp] arr)
-{
-    return with {
-        (_mul_SxV_(0, shp) <= iv < shp) : _sel_VxA_(iv, arr);
-    } : fold(+, 0);
-}
-
-int[d:shp,d] iota(int[d] shp)
-{
-    return { iv -> iv | iv < shp };
-}
+use Array: all;
+use StdIO: all;
 
 noinline
 int test()
@@ -22,14 +9,13 @@ int test()
 
 int main()
 {
-    start = raplStart();
-    StdIO::printf("Found %d RAPL packages\n", _sel_VxA_([0], _shape_A_(start)));
+    rapl = Rapl::raplStart();
+    printf("Found %d RAPL packages\n", shape(rapl)[0]);
 
-    StdIO::printf("res = %d\n", test());
+    printf("res = %d\n", test());
 
-    end = raplEnd(start);
-    //StdIO::printf("%fJ\n", _tod_S_(_sel_VxA_([0], end)) / 1e9);
-    StdIO::print(end);
+    energy_uj = Rapl::raplStop(rapl);
+    printf("%fJ\n", Rapl::tod(energy_uj));
 
     return 0;
 }

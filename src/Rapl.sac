@@ -1,13 +1,25 @@
 module Rapl;
 
-export all;
+export all except { + };
 
 external longlong[.] raplStart();
+    #pragma effect World::TheWorld
     #pragma linkobj "src/rapl.o"
     #pragma linksign [0]
     #pragma sacarg [0]
 
-external longlong[.] raplEnd(longlong[.] start);
+external longlong[.] raplStop(longlong[.] start);
+    #pragma effect World::TheWorld
     #pragma linkobj "src/rapl.o"
     #pragma linksign [0,1]
     #pragma sacarg [0,1]
+
+inline longlong +(longlong a, longlong b) { return _add_SxS_(a, b); }
+
+double tod(longlong[n] energy_uj)
+{
+    total = with {
+        ([0] <= iv < [n]): _sel_VxA_(iv, energy_uj);
+    }: fold(+, 0ll);
+    return _div_SxS_(_tod_S_(total), 1e9d);
+}
