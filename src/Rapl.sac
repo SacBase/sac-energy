@@ -1,27 +1,13 @@
-class Rapl;
-
-external classtype;
+module Rapl;
 
 export all;
 
-objdef Rapl raplObj = rapl_init();
-
-external Rapl rapl_init();
+external longlong[.] raplStart();
     #pragma linkobj "src/rapl.o"
-    #pragma linksign [1]
+    #pragma linksign [0]
+    #pragma sacarg [0]
 
-external void rapl_start(Rapl &rapl);
+external longlong[.] raplEnd(longlong[.] start);
     #pragma linkobj "src/rapl.o"
-
-external void rapl_end(Rapl &rapl);
-    #pragma linkobj "src/rapl.o"
-
-void rapl_start()
-{
-    rapl_start(raplObj);
-}
-
-void rapl_end()
-{
-    rapl_end(raplObj);
-}
+    #pragma linksign [0,1]
+    #pragma sacarg [0,1]

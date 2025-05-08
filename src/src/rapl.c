@@ -2,75 +2,71 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-#include "rapl.h"
+#include "sacinterface.h"
 
-static long long rapl_read(int package_id)
+static int energy_uj(int package_id, long long *value)
 {
     char path[64];
     snprintf(path, sizeof(path), "/sys/class/powercap/intel-rapl:%d/energy_uj", package_id);
 
     FILE *fp = fopen(path, "r");
     if (!fp) {
-        return -1;
+        return 0;
     }
 
-    long long energy;
-    int res = fscanf(fp, "%lld", &energy);
-    assert(res > 0);
+    assert(fscanf(fp, "%lld", value) > 0);
     fclose(fp);
 
-    return energy;
+    return 1;
 }
 
-void rapl_init(struct rapl **rapl_out)
+static void max_energy_range_uj(int package_id, long long *value)
 {
-    *rapl_out = (struct rapl *)malloc(sizeof(struct rapl));
+    char path[64];
+    snprintf(path, sizeof(path), "/sys/class/powercap/intel-rapl:%d/max_energy_range_uj", package_id);
 
-    long long energy;
-    int package_id = 0;
-    while ((energy = rapl_read(package_id)) >= 0)
-    {
-        (*rapl_out)->package_nanojoules[package_id] = energy;
-        package_id += 1;
-    }
+    FILE *fp = fopen(path, "r");
+    assert(fp);
 
-    (*rapl_out)->num_packages = package_id;
+    assert(fscanf(fp, "%lld", value) > 0);
+    fclose(fp);
 }
 
-void rapl_start(struct rapl *rapl)
+SACarg *raplStart(void)
 {
-    long long energy;
-    for (int package_id = 0; package_id < rapl->num_packages; package_id++)
+    long long *packages = (long long *)malloc(sizeof(long long) * 64);
+
+    int num_packages = 0;
+    while (energy_uj(num_packages, &packages[num_packages]))
     {
-        energy = rapl_read(package_id);
-        assert(energy >= 0);
-        rapl->package_nanojoules[package_id] = energy;
+        num_packages += 1;
     }
+
+    //printf("Found %d RAPL packages\n", num_packages);
+    packages = (long long *)realloc(packages, sizeof(long long) * num_packages);
+    return SACARGcreateFromPointer (SACTYPE__MAIN__longlong, (void *)packages, 1, num_packages);
 }
 
-void rapl_end(struct rapl *rapl)
+SACarg *raplEnd(SACarg *start)
 {
-    struct rapl elapsed;
-    elapsed.num_packages = rapl->num_packages;
+    int num_packages = SACARGgetShape (start, 0);
+    const long long *start_data = (const long long *)SACARGgetSharedData (SACTYPE__MAIN__longlong, start);
+    long long *elapsed_data = (long long *)malloc(sizeof(long long) * num_packages);
 
-    long long energy;
-    for (int package_id = 0; package_id < rapl->num_packages; package_id++)
+    long long prev, next, max;
+    for (int i = 0; i < num_packages; i++)
     {
-        energy = rapl_read(package_id);
-        assert(energy >= 0);
-        elapsed.package_nanojoules[package_id] = energy - rapl->package_nanojoules[package_id];
+        prev = start_data[i];
+        assert(energy_uj(i, &next));
+
+        if (next >= prev) {
+            elapsed_data[i] = next - prev;
+        } else {
+            //printf("The accumulator overflowed\n");
+            max_energy_range_uj(i, &max);
+            elapsed_data[i] = next + (max - prev);
+        }
     }
 
-    rapl_print(&elapsed);
-}
-
-void rapl_print(struct rapl *rapl)
-{
-    assert(rapl->num_packages > 0);
-    printf("%lld", rapl->package_nanojoules[0]);
-    for (int package_id = 1; package_id < rapl->num_packages; package_id++)
-    {
-        printf(",%lld", rapl->package_nanojoules[package_id]);
-    }
-    printf("\n");
+    return SACARGcreateFromPointer (SACTYPE__MAIN__longlong, (void *)elapsed_data, 1, num_packages);
 }

@@ -1,16 +1,35 @@
+use Rapl: all;
+
+inline int +(int a, int b) { return _add_SxS_(a, b); }
+
+int sum(int[d:shp] arr)
+{
+    return with {
+        (_mul_SxV_(0, shp) <= iv < shp) : _sel_VxA_(iv, arr);
+    } : fold(+, 0);
+}
+
+int[d:shp,d] iota(int[d] shp)
+{
+    return { iv -> iv | iv < shp };
+}
+
 noinline
 int test()
 {
-    return Array::sum(Array::iota([1000,1000,100]));
+    return sum(iota([1000,500,100]));
 }
 
 int main()
 {
-    Rapl::rapl_start();
+    start = raplStart();
+    StdIO::printf("Found %d RAPL packages\n", _sel_VxA_([0], _shape_A_(start)));
 
-    StdIO::print(test());
+    StdIO::printf("res = %d\n", test());
 
-    Rapl::rapl_end();
+    end = raplEnd(start);
+    //StdIO::printf("%fJ\n", _tod_S_(_sel_VxA_([0], end)) / 1e9);
+    StdIO::print(end);
 
     return 0;
 }
