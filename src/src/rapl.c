@@ -68,5 +68,7 @@ SACarg *raplStop(SACarg *start)
         }
     }
 
+    SACARGdeleteSacArray (&start);
+
     return SACARGcreateFromPointer (SACTYPE__MAIN__longlong, (void *)elapsed_data, 1, num_packages);
 }

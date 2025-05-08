@@ -1,21 +1,43 @@
 use Array: all;
+use CommandLine: all;
 use StdIO: all;
 
 noinline
 int test()
 {
+    MTClock::touch(MTClock::TheMTClock);
+
     return sum(iota([1000,500,100]));
 }
 
 int main()
 {
-    rapl = Rapl::raplStart();
-    printf("Found %d RAPL packages\n", shape(rapl)[0]);
+    iter = String::toi(argv(argc() - 1));
 
-    printf("res = %d\n", test());
+    for (i = 0; i < iter; i += 1) {
+        rapl = Rapl::raplStart();
+        sec1, nsec1 = MTClock::gettime();
 
-    energy_uj = Rapl::raplStop(rapl);
-    printf("%fJ\n", Rapl::tod(energy_uj));
+        printf("res = %d\n", test());
+
+        sec2, nsec2 = MTClock::gettime();
+        energy_uj = Rapl::raplStop(rapl);
+        sec = timediff(sec1, nsec1, sec2, nsec2);
+        printf("%f,%f\n", sec, Rapl::tod(energy_uj));
+    }
 
     return 0;
+}
+
+double timediff(long sec1, long nsec1, long sec2, long nsec2)
+{
+    sec = sec2 - sec1;
+    nsec = nsec2 - nsec1;
+
+    if (nsec < 0l) {
+        nsec = nsec + 1000000000l;
+        sec = sec - 1l;
+    }
+
+    return tod(sec) + tod(nsec) / 1e9d;
 }
