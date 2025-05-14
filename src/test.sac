@@ -20,10 +20,11 @@ int main()
 
         printf("res = %d\n", test());
 
+        t = Rapl::numThreads();
         sec2, nsec2 = MTClock::gettime();
         energy_uj = Rapl::raplStop(rapl);
         sec = timediff(sec1, nsec1, sec2, nsec2);
-        printf("%f,%f\n", sec, Rapl::tod(energy_uj));
+        printf("%d,%f,%f\n", t, sec, Rapl::tod(energy_uj));
     }
 
     return 0;

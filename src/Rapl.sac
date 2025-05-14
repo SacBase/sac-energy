@@ -14,6 +14,9 @@ external longlong[.] raplStop(longlong[.] start);
     #pragma linksign [0,1]
     #pragma sacarg [0,1]
 
+external int numThreads();
+    #pragma linkobj "src/rapl.o"
+
 inline longlong +(longlong a, longlong b) { return _add_SxS_(a, b); }
 
 double tod(longlong[n] energy_uj)

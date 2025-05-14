@@ -2,6 +2,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+#include "sac.h"
 #include "sacinterface.h"
 
 static int energy_uj(int package_id, long long *value)
@@ -71,4 +72,10 @@ SACarg *raplStop(SACarg *start)
     SACARGdeleteSacArray (&start);
 
     return SACARGcreateFromPointer (SACTYPE__MAIN__longlong, (void *)elapsed_data, 1, num_packages);
+}
+
+int numThreads(void)
+{
+    // Plus one for the queen
+    return SAC_MT_cnt_worker_bees + 1;
 }
