@@ -6,6 +6,7 @@ TARGETS ?= "seq;seq_checks;mt_pth"
 all: build
 
 build:
+	git submodule update --init --recursive
 	cmake -DTARGETS=$(TARGETS) -B $(BUILD_DIR)
 	cmake --build $(BUILD_DIR)
 
