@@ -79,3 +79,14 @@ int numThreads(void)
     // Plus one for the queen
     return SAC_MT_cnt_worker_bees + 1;
 }
+
+long long constraint_0_power_limit_uw()
+{
+    char path[64] = "/sys/class/powercap/intel-rapl:0/constraint_0_power_limit_uw";
+
+    FILE *fp = fopen(path, "r");
+    assert(fp);
+
+    assert(fscanf(fp, "%lld", value) > 0);
+    fclose(fp);
+}
