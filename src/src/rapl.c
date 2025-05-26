@@ -87,6 +87,9 @@ long long constraint_0_power_limit_uw(void)
     FILE *fp = fopen(path, "r");
     assert(fp);
 
-    assert(fscanf(fp, "%lld", value) > 0);
+    long long value;
+    assert(fscanf(fp, "%lld", &value) > 0);
     fclose(fp);
+
+    return value;
 }
