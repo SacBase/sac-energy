@@ -80,7 +80,7 @@ int numThreads(void)
     return SAC_MT_cnt_worker_bees + 1;
 }
 
-long long constraint_0_power_limit_uw()
+long long constraint_0_power_limit_uw(void)
 {
     char path[64] = "/sys/class/powercap/intel-rapl:0/constraint_0_power_limit_uw";
 
