@@ -85,7 +85,9 @@ long long constraint_0_power_limit_uw(void)
     char path[64] = "/sys/class/powercap/intel-rapl:0/constraint_0_power_limit_uw";
 
     FILE *fp = fopen(path, "r");
-    assert(fp);
+    if (fp == NULL) {
+        return -1;
+    }
 
     long long value;
     assert(fscanf(fp, "%lld", &value) > 0);
