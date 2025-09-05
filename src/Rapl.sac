@@ -2,11 +2,11 @@ class Rapl;
 
 external classtype;
 
-objdef Rapl TheRaplObject = createRaplObject();
-
 export all except { + };
 
-external MTClock createRaplObject();
+objdef Rapl TheRaplObject = createRaplObject();
+
+external TheRaplObject createRaplObject();
     #pragma effect World::TheWorld
     #pragma linkname "SAC_rapl_create"
     #pragma linkobj "src/rapl.o"
@@ -17,23 +17,23 @@ external void touch(TheRaplObject& obj);
     #pragma linkobj "src/rapl.o"
 
 external longlong[.] raplStart();
-    #pragma effect World::TheWorld
+    #pragma effect TheRaplObject
     #pragma linkobj "src/rapl.o"
     #pragma linksign [0]
     #pragma sacarg [0]
 
 external longlong[.] raplStop(longlong[.] start);
-    #pragma effect World::TheWorld
+    #pragma effect TheRaplObject
     #pragma linkobj "src/rapl.o"
     #pragma linksign [0,1]
     #pragma sacarg [0,1]
 
 external int numThreads();
-    #pragma effect World::TheWorld
+    #pragma effect TheRaplObject
     #pragma linkobj "src/rapl.o"
 
 external longlong constraint_0_power_limit_uw();
-    #pragma effect World::TheWorld
+    #pragma effect TheRaplObject
     #pragma linkobj "src/rapl.o"
 
 inline longlong +(longlong a, longlong b) { return _add_SxS_(a, b); }
