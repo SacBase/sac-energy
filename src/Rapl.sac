@@ -1,6 +1,20 @@
-module Rapl;
+class Rapl;
+
+external classtype;
+
+objdef Rapl TheRaplObject = createRaplObject();
 
 export all except { + };
+
+external MTClock createRaplObject();
+    #pragma effect World::TheWorld
+    #pragma linkname "SAC_rapl_create"
+    #pragma linkobj "src/rapl.o"
+    #pragma linksign [1]
+
+external void touch(TheRaplObject& obj);
+    #pragma linkname "SAC_rapl_touch"
+    #pragma linkobj "src/rapl.o"
 
 external longlong[.] raplStart();
     #pragma effect World::TheWorld
@@ -30,4 +44,9 @@ double tod(longlong[n] energy_uj)
         ([0] <= iv < [n]): _sel_VxA_(iv, energy_uj);
     }: fold(+, 0ll);
     return _div_SxS_(_tod_S_(total), 1e9d);
+}
+
+void touch()
+{
+    touch(TheRaplObject);
 }
