@@ -40,7 +40,7 @@ inline longlong +(longlong a, longlong b) { return _add_SxS_(a, b); }
 
 double[n] tod(longlong[n] energy_uj)
 {
-    return { [i] -> _div_SxS_(_tod_S_(_sel_VxA_([i], energy_uj)), 1e6d);
+    return { [i] -> _div_SxS_(_tod_S_(_sel_VxA_([i], energy_uj)), 1e6d) };
 }
 
 void touch()
