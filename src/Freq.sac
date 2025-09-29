@@ -30,8 +30,8 @@ external ulong cyclesStop(int fd);
 
 double freqMHz(ulong cycles, double seconds)
 {
-    return _div_SxS_(_tod_S_(_div_SxS_(_toi_S_(cycles), 1000000)),
-                     seconds);
+    return _div_SxS_(_tod_S_(cycles),
+                     _mul_SxS_(seconds, 1e6));
 }
 
 void touch()

@@ -30,9 +30,8 @@ int main()
         threads = Rapl::numThreads();
         seconds = MTClock::timediff(sec1, nsec1, sec2, nsec2);
         energy = Rapl::tod(energy_uj);
-        freq = Freq::freqMHz(cycles, seconds);
-        printf("%d threads, %fs, %fJ, %lu cycles, %fMHz\n",
-               threads, seconds, energy, cycles, freq);
+        printf("%d threads, %fs, %fJ, %lu cycles\n",
+               threads, seconds, energy, cycles);
     }
 
     return 0;
