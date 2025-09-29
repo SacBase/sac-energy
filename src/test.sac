@@ -15,16 +15,19 @@ int main()
     iter = String::toi(argv(argc() - 1));
 
     for (i = 0; i < iter; i += 1) {
+        fd1, fd2 = Freq::freqStart();
         rapl = Rapl::raplStart();
         sec1, nsec1 = MTClock::gettime();
 
         printf("res = %d\n", test());
 
-        t = Rapl::numThreads();
         sec2, nsec2 = MTClock::gettime();
         energy_uj = Rapl::raplStop(rapl);
+        freq = Freq::freqStop(fd1, fd2);
+
+        t = Rapl::numThreads();
         sec = timediff(sec1, nsec1, sec2, nsec2);
-        printf("%d,%f,%f\n", t, sec, Rapl::tod(energy_uj));
+        printf("%d,%f,%f,%f\n", t, sec, freq, Rapl::tod(energy_uj));
     }
 
     return 0;

@@ -5,12 +5,14 @@ ADD_CUSTOM_TARGET (${TARGET}-all-modules ALL)
 
 # C files
 SET (C_DEPS_SRC
+    src/freq.c
     src/ina.c
     src/rapl.c
 )
 
 # SaC files
 SET (SAC_SRC
+    Freq.sac
     Ina.sac
     Rapl.sac
 )

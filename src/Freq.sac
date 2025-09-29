@@ -1,0 +1,34 @@
+#pragma safe
+
+class Freq;
+
+external classtype;
+
+export all;
+
+objdef Freq TheFreqObject = createFreqObject();
+
+external Freq createFreqObject();
+    #pragma effect World::TheWorld
+    #pragma linkname "SAC_freq_create"
+    #pragma linkobj "src/freq.o"
+    #pragma linksign [1]
+
+external void touch(Freq& obj);
+    #pragma linkname "SAC_freq_touch"
+    #pragma linkobj "src/freq.o"
+
+external int, int freqStart();
+    #pragma effect TheFreqObject
+    #pragma linkobj "src/freq.o"
+    #pragma linksign [1,2]
+
+external double freqStop(int fd1, int fd2);
+    #pragma effect TheFreqObject
+    #pragma linkobj "src/freq.o"
+    #pragma linksign [0,1,2]
+
+void touch()
+{
+    touch(TheFreqObject);
+}
