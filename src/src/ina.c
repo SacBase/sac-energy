@@ -12,7 +12,7 @@
  *
  * We only care about electricity_consumed_total here, which is the fourth number.
  */
-static int read(void)
+static double read_energy_stats(void)
 {
     const char *url = getenv("ENERGY_STATS");
     if (!url) {
@@ -68,12 +68,12 @@ static int read(void)
 
 double inaStart(void)
 {
-    return read();
+    return read_energy_stats();
 }
 
 double inaStop(double start)
 {
-    double end = read();
+    double end = read_energy_stats();
     return end - start;
 }
 
