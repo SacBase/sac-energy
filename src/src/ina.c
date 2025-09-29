@@ -9,8 +9,6 @@
  * The received json looks as follows:
  *
  * {"electricity_consumed_current":%f,"measurements":%d,"steady_time":%d,"electricity_consumed_total":%f,"power_draw":%f}
- *
- * We only care about electricity_consumed_total here, which is the fourth number.
  */
 static double read_energy_stats(void)
 {
@@ -29,41 +27,34 @@ static double read_energy_stats(void)
         return -1.0f;
     }
 
-    double val = -1.0f;
-    int found = 0;
+    char buf[2048];
+    double current, total, power;
+    int measurements, steady_time;
+    double res = -1.0f;
 
-    char buf[1024];
     if (fgets(buf, sizeof(buf), fp)) {
-        int found = 0;
-        char *p = buf;
+        int n = sscanf(buf,
+            " { \"electricity_consumed_current\" : %f ,"
+            " \"measurements\" : %d ,"
+            " \"steady_time\" : %d ,"
+            " \"electricity_consumed_total\" : %f ,"
+            " \"power_draw\" : %f } %*[^}]",
+            &current, &measurements, &steady_time, &total, &power
+        );
 
-        while (*p && found < 4) {
-            char *end;
-            double tmp = strtof(p, &end);
-
-            if (end != p) {
-                // a number was found
-                found++;
-                if (found == 4) {
-                    val = tmp;
-                    break;
-                }
-                p = end;
-            } else {
-                // not a number
-                p++;
-            }
+        if (n == 5) {
+            res = total;
+        } else {
+            fprintf(stderr, "Failed to parse ENERGY_STATS response\n");
         }
     }
 
-    pclose(fp);
-
-    if (found < 4) {
-        fprintf(stderr, "Invalid json\n");
+    if (pclose(fp) < 0) {
+        perror("pclose");
         return -1.0f;
     }
 
-    return val;
+    return res;
 }
 
 double inaStart(void)

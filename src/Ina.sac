@@ -22,13 +22,11 @@ external double inaStart();
     #pragma effect TheInaObject
     #pragma linkobj "src/ina.o"
     #pragma linksign [0]
-    #pragma sacarg [0]
 
 external double inaStop(double start);
     #pragma effect TheInaObject
     #pragma linkobj "src/ina.o"
     #pragma linksign [0,1]
-    #pragma sacarg [0,1]
 
 void touch()
 {
