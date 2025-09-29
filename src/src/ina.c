@@ -34,11 +34,11 @@ static double read_energy_stats(void)
 
     if (fgets(buf, sizeof(buf), fp)) {
         int n = sscanf(buf,
-            " { \"electricity_consumed_current\" : %f ,"
+            " { \"electricity_consumed_current\" : %lf ,"
             " \"measurements\" : %d ,"
             " \"steady_time\" : %d ,"
-            " \"electricity_consumed_total\" : %f ,"
-            " \"power_draw\" : %f } %*[^}]",
+            " \"electricity_consumed_total\" : %lf ,"
+            " \"power_draw\" : %lf } %*[^}]",
             &current, &measurements, &steady_time, &total, &power
         );
 
