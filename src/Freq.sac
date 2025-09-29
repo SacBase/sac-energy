@@ -18,15 +18,21 @@ external void touch(Freq& obj);
     #pragma linkname "SAC_freq_touch"
     #pragma linkobj "src/freq.o"
 
-external int, int freqStart();
+external int cyclesStart();
     #pragma effect TheFreqObject
     #pragma linkobj "src/freq.o"
-    #pragma linksign [1,2]
+    #pragma linksign [0]
 
-external double freqStop(int fd1, int fd2);
+external ulong cyclesStop(int fd);
     #pragma effect TheFreqObject
     #pragma linkobj "src/freq.o"
-    #pragma linksign [0,1,2]
+    #pragma linksign [0,1]
+
+double freqMHz(ulong cycles, double seconds)
+{
+    return _div_SxS_(_tod_S_(_div_SxS_(_toi_S_(cycles), 1000000)),
+                     seconds);
+}
 
 void touch()
 {

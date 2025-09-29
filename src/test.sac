@@ -5,7 +5,9 @@ use StdIO: all;
 noinline
 int test()
 {
-    MTClock::touch(MTClock::TheMTClock);
+    MTClock::touch();
+    Rapl::touch();
+    Freq::touch();
 
     return sum(iota([1000,500,100]));
 }
@@ -15,7 +17,7 @@ int main()
     iter = String::toi(argv(argc() - 1));
 
     for (i = 0; i < iter; i += 1) {
-        fd1, fd2 = Freq::freqStart();
+        fd = Freq::cyclesStart();
         rapl = Rapl::raplStart();
         sec1, nsec1 = MTClock::gettime();
 
@@ -23,25 +25,15 @@ int main()
 
         sec2, nsec2 = MTClock::gettime();
         energy_uj = Rapl::raplStop(rapl);
-        freq = Freq::freqStop(fd1, fd2);
+        cycles = Freq::cyclesStop(fd);
 
-        t = Rapl::numThreads();
-        sec = timediff(sec1, nsec1, sec2, nsec2);
-        printf("%d,%f,%f,%f\n", t, sec, freq, Rapl::tod(energy_uj));
+        threads = Rapl::numThreads();
+        seconds = MTClock::timediff(sec1, nsec1, sec2, nsec2);
+        energy = Rapl::tod(energy_uj);
+        freq = Freq::freqMHz(cycles, seconds);
+        printf("%d threads, %fs, %fJ, %lu cycles, %fMHz\n",
+               threads, seconds, energy, cycles, freq);
     }
 
     return 0;
-}
-
-double timediff(long sec1, long nsec1, long sec2, long nsec2)
-{
-    sec = sec2 - sec1;
-    nsec = nsec2 - nsec1;
-
-    if (nsec < 0l) {
-        nsec = nsec + 1000000000l;
-        sec = sec - 1l;
-    }
-
-    return tod(sec) + tod(nsec) / 1e9d;
 }
