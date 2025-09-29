@@ -1,3 +1,5 @@
+#pragma safe
+
 class Rapl;
 
 external classtype;
