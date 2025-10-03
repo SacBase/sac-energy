@@ -18,12 +18,12 @@ external void touch(Stall& obj);
     #pragma linkname "SAC_stall_touch"
     #pragma linkobj "src/stall.o"
 
-external int stallsStart();
+external int stallStart();
     #pragma effect TheStallObject
     #pragma linkobj "src/stall.o"
     #pragma linksign [0]
 
-external ulong stallsStop(int fd);
+external ulong stallStop(int fd);
     #pragma effect TheStallObject
     #pragma linkobj "src/stall.o"
     #pragma linksign [0,1]
