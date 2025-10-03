@@ -1,0 +1,34 @@
+#pragma safe
+
+class Stall;
+
+external classtype;
+
+export all;
+
+objdef Stall TheStallObject = createStallObject();
+
+external Stall createStallObject();
+    #pragma effect World::TheWorld
+    #pragma linkname "SAC_stall_create"
+    #pragma linkobj "src/stall.o"
+    #pragma linksign [1]
+
+external void touch(Stall& obj);
+    #pragma linkname "SAC_stall_touch"
+    #pragma linkobj "src/stall.o"
+
+external int stallsStart();
+    #pragma effect TheStallObject
+    #pragma linkobj "src/stall.o"
+    #pragma linksign [0]
+
+external ulong stallsStop(int fd);
+    #pragma effect TheStallObject
+    #pragma linkobj "src/stall.o"
+    #pragma linksign [0,1]
+
+void touch()
+{
+    touch(TheStallObject);
+}

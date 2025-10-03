@@ -8,6 +8,7 @@ SET (C_DEPS_SRC
     src/freq.c
     src/ina.c
     src/rapl.c
+    src/stall.c
 )
 
 # SaC files
@@ -15,6 +16,7 @@ SET (SAC_SRC
     Freq.sac
     Ina.sac
     Rapl.sac
+    Stall.sac
 )
 
 # For every C source, compile an object file maintaining the right
