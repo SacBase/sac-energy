@@ -27,7 +27,7 @@ static unsigned long read_counter(int fd)
     return value;
 }
 
-int stallsStart(void)
+int stallStart(void)
 {
     struct perf_event_attr pe;
     memset(&pe, 0, sizeof(struct perf_event_attr));
@@ -58,7 +58,7 @@ int stallsStart(void)
     return fd;
 }
 
-unsigned long stallsStop(int fd)
+unsigned long stallStop(int fd)
 {
     if (ioctl(fd, PERF_EVENT_IOC_DISABLE, 0) < 0) {
         perror("ioctl PERF_EVENT_IOC_DISABLE");
