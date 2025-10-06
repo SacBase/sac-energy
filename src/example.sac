@@ -1,5 +1,4 @@
 use Array: all;
-use CommandLine: all;
 use StdIO: all;
 
 noinline
@@ -14,9 +13,7 @@ int test()
 
 int main()
 {
-    iter = String::toi(argv(argc() - 1));
-
-    for (i = 0; i < iter; i += 1) {
+    for (i = 0; i < 3; i += 1) {
         instructions_fd, cycles_fd, ref_cycles_fd, bus_cycles_fd, cache_misses_fd = Perf::perfStart();
         rapl = Rapl::raplStart();
         sec1, nsec1 = MTClock::gettime();

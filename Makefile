@@ -9,9 +9,9 @@ build:
 	cmake -DTARGETS=$(TARGETS) -B $(BUILD_DIR)
 	cmake --build $(BUILD_DIR)
 
-test: build
+bin/example: build
 	mkdir -p bin
-	sac2c src/test.sac -o bin/test
+	sac2c src/example.sac -o bin/example
 
 clean:
 	$(RM) -r $(BUILD_DIR)

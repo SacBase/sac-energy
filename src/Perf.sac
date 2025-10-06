@@ -28,12 +28,6 @@ external ulong, ulong, ulong, ulong, ulong perfStop(int instructions_fd, int cyc
     #pragma linkobj "src/perf.o"
     #pragma linksign [1,2,3,4,5,6,7,8,9,10]
 
-double freqMHz(ulong cycles, double seconds)
-{
-    return _div_SxS_(_tod_S_(cycles),
-                     _mul_SxS_(seconds, 1e6));
-}
-
 void touch()
 {
     touch(ThePerfObject);
