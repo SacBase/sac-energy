@@ -1,0 +1,34 @@
+#pragma safe
+
+class Perf;
+
+external classtype;
+
+export all;
+
+objdef Perf ThePerfObject = createPerfObject();
+
+external Perf createPerfObject();
+    #pragma effect World::TheWorld
+    #pragma linkname "SAC_perf_create"
+    #pragma linkobj "src/perf.o"
+    #pragma linksign [1]
+
+external void touch(Perf& obj);
+    #pragma linkname "SAC_perf_touch"
+    #pragma linkobj "src/perf.o"
+
+external int, int, int, int perfStart();
+    #pragma effect TheperfObject
+    #pragma linkobj "src/perf.o"
+    #pragma linksign [1,2,3,4]
+
+external ulong, ulong, ulong, ulong perfStop(int instructions_fd, int cycles_fd, int ref_cycles_fd, int bus_cycles_fd);
+    #pragma effect TheperfObject
+    #pragma linkobj "src/perf.o"
+    #pragma linksign [1,2,3,4,5,6,7,8]
+
+void touch()
+{
+    touch(ThePerfObject);
+}

@@ -1,0 +1,106 @@
+#define _GNU_SOURCE
+#include <linux/perf_event.h>
+#include <sys/syscall.h>
+#include <unistd.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <sys/ioctl.h>
+#include <stdint.h>
+
+#include "sac.h"
+#include "sacinterface.h"
+
+static long perf_event_open(struct perf_event_attr *hw_event, pid_t pid,
+                            int cpu, int group_fd, unsigned long flags)
+{
+    return syscall(__NR_perf_event_open, hw_event, pid, cpu, group_fd, flags);
+}
+
+static int perf_event_create(enum perf_hw_id config)
+{
+    struct perf_event_attr pe;
+    memset(&pe, 0, sizeof(struct perf_event_attr));
+
+    pe.type = PERF_TYPE_HARDWARE;
+    pe.size = sizeof(struct perf_event_attr);
+    pe.config = config;
+    pe.disabled = 1;
+    pe.exclude_kernel = 0;
+    pe.exclude_hv = 0;
+
+    int fd = perf_event_open(&pe, 0, -1, -1, 0);
+    if (fd == -1) {
+        perror("perf_event_open");
+        return -1;
+    }
+
+    if (ioctl(fd, PERF_EVENT_IOC_RESET, 0) < 0) {
+        perror("perf_event_reset");
+        return -1;
+    }
+
+    if (ioctl(fd, PERF_EVENT_IOC_ENABLE, 0) < 0) {
+        perror("perf_event_enable");
+        return -1;
+    }
+
+    return fd;
+}
+
+static unsigned long read_counter(int fd)
+{
+    unsigned long value = 0;
+    if (read(fd, &value, sizeof(value)) != sizeof(value)) {
+        perror("perf_event_read");
+        return 0;
+    }
+    return value;
+}
+
+static unsigned long perf_event_stop(int fd)
+{
+    if (fd == -1) {
+        return 0;
+    }
+
+    if (ioctl(fd, PERF_EVENT_IOC_DISABLE, 0) < 0) {
+        perror("perf_event_disable");
+        return 0;
+    }
+
+    unsigned long counter = read_counter(fd);
+
+    if (close(fd) < 0) {
+        perror("perf_event_close");
+    }
+
+    return counter;
+}
+
+void perfStart(int *out_instructions_fd, int *out_cycles_fd, int *out_ref_cycles_fd, int *out_bus_cycles_fd)
+{
+    *out_instructions_fd = perf_event_create(PERF_COUNT_HW_INSTRUCTIONS);
+    *out_cycles_fd       = perf_event_create(PERF_COUNT_HW_CPU_CYCLES);
+    *out_ref_cycles_fd   = perf_event_create(PERF_COUNT_HW_REF_CPU_CYCLES);
+    *out_bus_cycles_fd   = perf_event_create(PERF_COUNT_HW_BUS_CYCLES);
+}
+
+void perfStop(unsigned long *out_instructions, unsigned long *out_cycles, unsigned long *out_ref_cycles, unsigned long *out_bus_cycles,
+              int instructions_fd, int cycles_fd, int ref_cycles_fd, int bus_cycles_fd)
+{
+    *out_instructions = perf_event_stop(instructions_fd);
+    *out_cycles       = perf_event_stop(cycles_fd);
+    *out_ref_cycles   = perf_event_stop(ref_cycles_fd);
+    *out_bus_cycles   = perf_event_stop(bus_cycles_fd);
+}
+
+void *SAC_perf_create(void)
+{
+    return (void*)0;
+}
+
+void SAC_perf_touch(void *obj)
+{
+    /* noop */
+}

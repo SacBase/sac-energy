@@ -7,6 +7,7 @@ ADD_CUSTOM_TARGET (${TARGET}-all-modules ALL)
 SET (C_DEPS_SRC
     src/freq.c
     src/ina.c
+    src/perf.c
     src/rapl.c
     src/stall.c
 )
@@ -15,6 +16,7 @@ SET (C_DEPS_SRC
 SET (SAC_SRC
     Freq.sac
     Ina.sac
+    Perf.sac
     Rapl.sac
     Stall.sac
 )
