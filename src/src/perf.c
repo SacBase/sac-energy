@@ -78,23 +78,27 @@ static unsigned long perf_event_stop(int fd)
     return counter;
 }
 
-void perfStart(int *out_instructions_fd, int *out_cycles_fd, int *out_ref_cycles_fd, int *out_bus_cycles_fd, int *out_cache_misses_fd)
+void perfStart(int *out_instructions_fd, int *out_cycles_fd, int *out_ref_cycles_fd, int *out_bus_cycles_fd, int *out_stalled_cycles_fd, int *out_cache_misses_fd, int *out_cache_ref_fd)
 {
-    *out_instructions_fd = perf_event_create(PERF_COUNT_HW_INSTRUCTIONS);
-    *out_cycles_fd       = perf_event_create(PERF_COUNT_HW_CPU_CYCLES);
-    *out_ref_cycles_fd   = perf_event_create(PERF_COUNT_HW_REF_CPU_CYCLES);
-    *out_bus_cycles_fd   = perf_event_create(PERF_COUNT_HW_BUS_CYCLES);
-    *out_cache_misses_fd = perf_event_create(PERF_COUNT_HW_CACHE_MISSES);
+    *out_instructions_fd   = perf_event_create(PERF_COUNT_HW_INSTRUCTIONS);
+    *out_cycles_fd         = perf_event_create(PERF_COUNT_HW_CPU_CYCLES);
+    *out_ref_cycles_fd     = perf_event_create(PERF_COUNT_HW_REF_CPU_CYCLES);
+    *out_bus_cycles_fd     = perf_event_create(PERF_COUNT_HW_BUS_CYCLES);
+    *out_stalled_cycles_fd = perf_event_create(PERF_COUNT_HW_STALLED_CYCLES_BACKEND);
+    *out_cache_misses_fd   = perf_event_create(PERF_COUNT_HW_CACHE_MISSES);
+    *out_cache_ref_fd      = perf_event_create(PERF_COUNT_HW_CACHE_REFERENCES);
 }
 
-void perfStop(unsigned long *out_instructions, unsigned long *out_cycles, unsigned long *out_ref_cycles, unsigned long *out_bus_cycles, unsigned long *out_cache_misses,
-              int instructions_fd, int cycles_fd, int ref_cycles_fd, int bus_cycles_fd, int cache_misses_fd)
+void perfStop(unsigned long *out_instructions, unsigned long *out_cycles, unsigned long *out_ref_cycles, unsigned long *out_bus_cycles, unsigned long *out_stalled_cycles, unsigned long *out_cache_misses, unsigned long *out_cache_ref,
+              int instructions_fd, int cycles_fd, int ref_cycles_fd, int bus_cycles_fd, int stalled_cycles_fd, int cache_misses_fd, int cache_ref_fd)
 {
-    *out_instructions = perf_event_stop(instructions_fd);
-    *out_cycles       = perf_event_stop(cycles_fd);
-    *out_ref_cycles   = perf_event_stop(ref_cycles_fd);
-    *out_bus_cycles   = perf_event_stop(bus_cycles_fd);
-    *out_cache_misses = perf_event_stop(cache_misses_fd);
+    *out_instructions   = perf_event_stop(instructions_fd);
+    *out_cycles         = perf_event_stop(cycles_fd);
+    *out_ref_cycles     = perf_event_stop(ref_cycles_fd);
+    *out_bus_cycles     = perf_event_stop(bus_cycles_fd);
+    *out_stalled_cycles = perf_event_stop(stalled_cycles_fd);
+    *out_cache_misses   = perf_event_stop(cache_misses_fd);
+    *out_cache_ref      = perf_event_stop(cache_ref_fd);
 }
 
 void *SAC_perf_create(void)
