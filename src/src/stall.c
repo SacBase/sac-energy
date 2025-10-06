@@ -39,7 +39,7 @@ int stallStart(void)
     pe.exclude_kernel = 0;
     pe.exclude_hv = 0;
 
-    int fd = perf_event_open(&pe, -1, 0, -1, 0);
+    int fd = perf_event_open(&pe, 0, -1, -1, 0);
     if (fd == -1) {
         perror("perf_event_open PERF_COUNT_HW_STALLED_CYCLES_FRONTEND");
         exit(1);
