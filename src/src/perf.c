@@ -31,7 +31,7 @@ static int perf_event_create(enum perf_hw_id config)
 
     int fd = perf_event_open(&pe, 0, -1, -1, 0);
     if (fd == -1) {
-        perror("perf_event_open");
+        //perror("perf_event_open");
         return -1;
     }
 
@@ -78,21 +78,23 @@ static unsigned long perf_event_stop(int fd)
     return counter;
 }
 
-void perfStart(int *out_instructions_fd, int *out_cycles_fd, int *out_ref_cycles_fd, int *out_bus_cycles_fd)
+void perfStart(int *out_instructions_fd, int *out_cycles_fd, int *out_ref_cycles_fd, int *out_bus_cycles_fd, int *out_cache_misses_fd)
 {
     *out_instructions_fd = perf_event_create(PERF_COUNT_HW_INSTRUCTIONS);
     *out_cycles_fd       = perf_event_create(PERF_COUNT_HW_CPU_CYCLES);
     *out_ref_cycles_fd   = perf_event_create(PERF_COUNT_HW_REF_CPU_CYCLES);
     *out_bus_cycles_fd   = perf_event_create(PERF_COUNT_HW_BUS_CYCLES);
+    *out_cache_misses_fd = perf_event_create(PERF_COUNT_HW_CACHE_MISSES);
 }
 
-void perfStop(unsigned long *out_instructions, unsigned long *out_cycles, unsigned long *out_ref_cycles, unsigned long *out_bus_cycles,
-              int instructions_fd, int cycles_fd, int ref_cycles_fd, int bus_cycles_fd)
+void perfStop(unsigned long *out_instructions, unsigned long *out_cycles, unsigned long *out_ref_cycles, unsigned long *out_bus_cycles, unsigned long *out_cache_misses,
+              int instructions_fd, int cycles_fd, int ref_cycles_fd, int bus_cycles_fd, int cache_misses_fd)
 {
     *out_instructions = perf_event_stop(instructions_fd);
     *out_cycles       = perf_event_stop(cycles_fd);
     *out_ref_cycles   = perf_event_stop(ref_cycles_fd);
     *out_bus_cycles   = perf_event_stop(bus_cycles_fd);
+    *out_cache_misses = perf_event_stop(cache_misses_fd);
 }
 
 void *SAC_perf_create(void)

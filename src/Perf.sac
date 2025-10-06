@@ -18,15 +18,21 @@ external void touch(Perf& obj);
     #pragma linkname "SAC_perf_touch"
     #pragma linkobj "src/perf.o"
 
-external int, int, int, int perfStart();
+external int, int, int, int, int perfStart();
     #pragma effect ThePerfObject
     #pragma linkobj "src/perf.o"
-    #pragma linksign [1,2,3,4]
+    #pragma linksign [1,2,3,4,5]
 
-external ulong, ulong, ulong, ulong perfStop(int instructions_fd, int cycles_fd, int ref_cycles_fd, int bus_cycles_fd);
+external ulong, ulong, ulong, ulong, ulong perfStop(int instructions_fd, int cycles_fd, int ref_cycles_fd, int bus_cycles_fd, int cache_misses_fd);
     #pragma effect ThePerfObject
     #pragma linkobj "src/perf.o"
-    #pragma linksign [1,2,3,4,5,6,7,8]
+    #pragma linksign [1,2,3,4,5,6,7,8,9,10]
+
+double freqMHz(ulong cycles, double seconds)
+{
+    return _div_SxS_(_tod_S_(cycles),
+                     _mul_SxS_(seconds, 1e6));
+}
 
 void touch()
 {

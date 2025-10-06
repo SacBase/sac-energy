@@ -15,6 +15,10 @@ jobs:
         run: cp -r /root/.sac2crc $HOME/.sac2crc
       - name: Build
         run: make
+      - name: Test
+        run: |
+          make test
+          ./bin/test 3
 
 # env:
 #   BASE_URL: https://gitlab.sac-home.org/sac-group/sac-packages/-/raw/master/latest/weekly

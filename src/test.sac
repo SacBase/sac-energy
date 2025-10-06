@@ -7,7 +7,7 @@ int test()
 {
     MTClock::touch();
     Rapl::touch();
-    Freq::touch();
+    Perf::touch();
 
     return sum(iota([1000,500,100]));
 }
@@ -17,8 +17,7 @@ int main()
     iter = String::toi(argv(argc() - 1));
 
     for (i = 0; i < iter; i += 1) {
-        cycle_fd = Freq::cyclesStart();
-        stall_fd = Stall::stallStart();
+        instructions_fd, cycles_fd, ref_cycles_fd, bus_cycles_fd, cache_misses_fd = Perf::perfStart();
         rapl = Rapl::raplStart();
         sec1, nsec1 = MTClock::gettime();
 
@@ -26,14 +25,13 @@ int main()
 
         sec2, nsec2 = MTClock::gettime();
         energy_uj = Rapl::raplStop(rapl);
-        cycles = Freq::cyclesStop(cycle_fd);
-        stalls = Stall::stallStop(stall_fd);
+        instructions, cycles, ref_cycles, bus_cycles, cache_misses = Perf::perfStop(instructions_fd, cycles_fd, ref_cycles_fd, bus_cycles_fd, cache_misses_fd);
 
         threads = Rapl::numThreads();
         seconds = MTClock::timediff(sec1, nsec1, sec2, nsec2);
         energy = Rapl::tod(energy_uj);
-        printf("%d threads, %fs, %fJ, %lu cycles, %lu stalls\n",
-               threads, seconds, energy, cycles, stalls);
+        printf("%d threads, %fs, %fJ, %lu instructions, %lu cycles, %lu ref cycles, %lu bus cycles %lu cache misses\n",
+               threads, seconds, energy, instructions, cycles, ref_cycles, bus_cycles, cache_misses);
     }
 
     return 0;
