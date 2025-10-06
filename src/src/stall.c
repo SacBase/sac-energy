@@ -34,7 +34,7 @@ int stallStart(void)
 
     pe.type = PERF_TYPE_HARDWARE;
     pe.size = sizeof(struct perf_event_attr);
-    pe.config = PERF_COUNT_HW_STALLED_CYCLES_FRONTEND;
+    pe.config = PERF_COUNT_HW_BUS_CYCLES;
     pe.disabled = 1;
     pe.exclude_kernel = 0;
     pe.exclude_hv = 0;
