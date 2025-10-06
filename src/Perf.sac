@@ -19,12 +19,12 @@ external void touch(Perf& obj);
     #pragma linkobj "src/perf.o"
 
 external int, int, int, int perfStart();
-    #pragma effect TheperfObject
+    #pragma effect ThePerfObject
     #pragma linkobj "src/perf.o"
     #pragma linksign [1,2,3,4]
 
 external ulong, ulong, ulong, ulong perfStop(int instructions_fd, int cycles_fd, int ref_cycles_fd, int bus_cycles_fd);
-    #pragma effect TheperfObject
+    #pragma effect ThePerfObject
     #pragma linkobj "src/perf.o"
     #pragma linksign [1,2,3,4,5,6,7,8]
 
