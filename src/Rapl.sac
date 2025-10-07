@@ -4,7 +4,7 @@ class Rapl;
 
 external classtype;
 
-export all except { + };
+export all;
 
 objdef Rapl TheRaplObject = createRaplObject();
 
@@ -18,17 +18,15 @@ external void touch(Rapl& obj);
     #pragma linkname "SAC_rapl_touch"
     #pragma linkobj "src/rapl.o"
 
-external longlong[.] raplStart();
+external longlong raplStart(int package, int subzone);
     #pragma effect TheRaplObject
     #pragma linkobj "src/rapl.o"
-    #pragma linksign [0]
-    #pragma sacarg [0]
+    #pragma linksign [0,1,2]
 
-external longlong[.] raplStop(longlong[.] start);
+external longlong raplStop(int package, int subzone, longlong energyStart);
     #pragma effect TheRaplObject
     #pragma linkobj "src/rapl.o"
-    #pragma linksign [0,1]
-    #pragma sacarg [0,1]
+    #pragma linksign [0,1,2,3]
 
 external int numThreads();
     #pragma effect TheRaplObject
@@ -38,11 +36,9 @@ external longlong constraint_0_power_limit_uw();
     #pragma effect TheRaplObject
     #pragma linkobj "src/rapl.o"
 
-inline longlong +(longlong a, longlong b) { return _add_SxS_(a, b); }
-
-double[n] tod(longlong[n] energy_uj)
+double tod(longlong energy_uj)
 {
-    return { [i] -> _div_SxS_(_tod_S_(_sel_VxA_([i], energy_uj)), 1e6d) };
+    return _div_SxS_(_tod_S_(energy_uj), 1e6d);
 }
 
 void touch()

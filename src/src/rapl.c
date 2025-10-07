@@ -1,77 +1,79 @@
-#include <assert.h>
 #include <stdio.h>
 #include <stdlib.h>
 
 #include "sac.h"
 #include "sacinterface.h"
 
-static int energy_uj(int package_id, long long *value)
+static long long energy_uj(int package, int subzone)
 {
     char path[64];
-    snprintf(path, sizeof(path), "/sys/class/powercap/intel-rapl:%d/energy_uj", package_id);
+    if (subzone < 0) {
+        snprintf(path, sizeof(path), "/sys/class/powercap/intel-rapl:%d/energy_uj", package);
+    } else {
+        snprintf(path, sizeof(path), "/sys/class/powercap/intel-rapl:%d:%d/energy_uj", package, subzone);
+    }
 
     FILE *fp = fopen(path, "r");
     if (!fp) {
+        perror("popen");
         return 0;
     }
 
-    assert(fscanf(fp, "%lld", value) > 0);
-    fclose(fp);
+    if (fscanf(fp, "%lld", value) <= 0) {
+        perror("fscanf");
+        return 0;
+    }
 
-    return 1;
+    if (fclose(fp) < 0) {
+        perror("fclose");
+    }
+
+    return value;
 }
 
-static void max_energy_range_uj(int package_id, long long *value)
+static long long max_energy_range_uj(int package, int subzone)
 {
     char path[64];
-    snprintf(path, sizeof(path), "/sys/class/powercap/intel-rapl:%d/max_energy_range_uj", package_id);
+    if (subzone < 0) {
+        snprintf(path, sizeof(path), "/sys/class/powercap/intel-rapl:%d/max_energy_range_uj", package);
+    } else {
+        snprintf(path, sizeof(path), "/sys/class/powercap/intel-rapl:%d:%d/max_energy_range_uj", package, subzone);
+    }
 
     FILE *fp = fopen(path, "r");
-    assert(fp);
-
-    assert(fscanf(fp, "%lld", value) > 0);
-    fclose(fp);
-}
-
-SACarg *raplStart(void)
-{
-    long long *packages = (long long *)malloc(sizeof(long long) * 64);
-
-    int num_packages = 0;
-    while (energy_uj(num_packages, &packages[num_packages]))
-    {
-        num_packages += 1;
+    if (!fp) {
+        perror("popen");
+        return 0;
     }
 
-    //printf("Found %d RAPL packages\n", num_packages);
-    packages = (long long *)realloc(packages, sizeof(long long) * num_packages);
-    return SACARGcreateFromPointer (SACTYPE__MAIN__longlong, (void *)packages, 1, num_packages);
-}
-
-SACarg *raplStop(SACarg *start)
-{
-    int num_packages = SACARGgetShape (start, 0);
-    const long long *start_data = (const long long *)SACARGgetSharedData (SACTYPE__MAIN__longlong, start);
-    long long *elapsed_data = (long long *)malloc(sizeof(long long) * num_packages);
-
-    long long prev, next, max;
-    for (int i = 0; i < num_packages; i++)
-    {
-        prev = start_data[i];
-        assert(energy_uj(i, &next));
-
-        if (next >= prev) {
-            elapsed_data[i] = next - prev;
-        } else {
-            //printf("The accumulator overflowed\n");
-            max_energy_range_uj(i, &max);
-            elapsed_data[i] = next + (max - prev);
-        }
+    if (fscanf(fp, "%lld", value) <= 0) {
+        perror("fscanf");
+        return 0;
     }
 
-    SACARGdeleteSacArray (&start);
+    if (fclose(fp) < 0) {
+        perror("fclose");
+    }
 
-    return SACARGcreateFromPointer (SACTYPE__MAIN__longlong, (void *)elapsed_data, 1, num_packages);
+    return value;
+}
+
+long long raplStart(int package, int subzone)
+{
+    return energy_uj(package, subzone);
+}
+
+long long raplStop(int package, int subzone, long long energy_start)
+{
+    long long energy_end = energy_uj(package, subzone);
+
+    if (energy_end >= energy_start) {
+        return energy_end - energy_start;
+    } else {
+        // The accumulator overflowed
+        long long accumulator_max = max_energy_range_uj(package, subzone);
+        return = energy_end + (accumulator_max - energy_start);
+    }
 }
 
 int numThreads(void)

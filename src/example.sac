@@ -15,20 +15,24 @@ int main()
 {
     for (i = 0; i < 3; i += 1) {
         instructions_fd, cycles_fd, ref_cycles_fd, bus_cycles_fd, stalled_cycles_fd, cache_misses_fd, cache_ref_fd = Perf::perfStart();
-        rapl = Rapl::raplStart();
+        rapl0 = Rapl::raplStart(0, -1);
+        rapl00 = Rapl::raplStart(0, 0);
+        rapl01 = Rapl::raplStart(0, 1);
         sec1, nsec1 = MTClock::gettime();
 
         printf("res = %d\n", test());
 
         sec2, nsec2 = MTClock::gettime();
-        energy_uj = Rapl::raplStop(rapl);
+        energy0 = Rapl::raplStop(0, -1, rapl0);
+        energy00 = Rapl::raplStop(0, 0, rapl00);
+        energy01 = Rapl::raplStop(0, 1, rapl01);
         instructions, cycles, ref_cycles, bus_cycles, stalled_cycles, cache_misses, cache_ref = Perf::perfStop(instructions_fd, cycles_fd, ref_cycles_fd, bus_cycles_fd, stalled_cycles_fd, cache_misses_fd, cache_ref_fd);
 
         threads = Rapl::numThreads();
         seconds = MTClock::timediff(sec1, nsec1, sec2, nsec2);
         energy = Rapl::tod(energy_uj);
-        printf("%d threads, %fs, %fJ, %lu instructions, %lu cycles, %lu ref cycles, %lu bus cycles, %lu stalled cycles, %lu cache misses, %lu cache ref\n",
-            threads, seconds, energy, instructions, cycles, ref_cycles, bus_cycles, stalled_cycles, cache_misses, cache_ref);
+        printf("%d threads, %fs, %fJ %fJ %fJ, %lu instructions, %lu cycles, %lu ref cycles, %lu bus cycles, %lu stalled cycles, %lu cache misses, %lu cache ref\n",
+            threads, seconds, energy0, energy00, energy01, instructions, cycles, ref_cycles, bus_cycles, stalled_cycles, cache_misses, cache_ref);
     }
 
     return 0;

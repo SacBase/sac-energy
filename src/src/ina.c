@@ -50,7 +50,6 @@ static double read_energy_stats(void)
 
     if (pclose(fp) < 0) {
         perror("pclose");
-        return -1.0f;
     }
 
     return res;
