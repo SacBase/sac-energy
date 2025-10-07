@@ -1,7 +1,7 @@
 BUILD_DIR ?= build
 TARGETS ?= "seq;seq_checks;mt_pth"
 
-.PHONY: all build test clean
+.PHONY: all build clean
 
 all: build
 

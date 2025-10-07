@@ -10,7 +10,7 @@ static long long energy_uj(int package, int subzone)
     if (subzone < 0) {
         snprintf(path, sizeof(path), "/sys/class/powercap/intel-rapl:%d/energy_uj", package);
     } else {
-        snprintf(path, sizeof(path), "/sys/class/powercap/intel-rapl:%d:%d/energy_uj", package, subzone);
+        snprintf(path, sizeof(path), "/sys/class/powercap/intel-rapl:%d/intel-rapl:%d:%d/energy_uj", package, package, subzone);
     }
 
     FILE *fp = fopen(path, "r");
@@ -19,8 +19,8 @@ static long long energy_uj(int package, int subzone)
         return 0;
     }
 
-    long long *value;
-    if (fscanf(fp, "%lld", value) <= 0) {
+    long long res;
+    if (fscanf(fp, "%lld", &res) <= 0) {
         perror("fscanf");
         return 0;
     }
@@ -29,7 +29,7 @@ static long long energy_uj(int package, int subzone)
         perror("fclose");
     }
 
-    return *value;
+    return res;
 }
 
 static long long max_energy_range_uj(int package, int subzone)
@@ -38,7 +38,7 @@ static long long max_energy_range_uj(int package, int subzone)
     if (subzone < 0) {
         snprintf(path, sizeof(path), "/sys/class/powercap/intel-rapl:%d/max_energy_range_uj", package);
     } else {
-        snprintf(path, sizeof(path), "/sys/class/powercap/intel-rapl:%d:%d/max_energy_range_uj", package, subzone);
+        snprintf(path, sizeof(path), "/sys/class/powercap/intel-rapl:%d/intel-rapl:%d:%d/max_energy_range_uj", package, package, subzone);
     }
 
     FILE *fp = fopen(path, "r");
@@ -47,8 +47,8 @@ static long long max_energy_range_uj(int package, int subzone)
         return 0;
     }
 
-    long long *value;
-    if (fscanf(fp, "%lld", value) <= 0) {
+    long long res;
+    if (fscanf(fp, "%lld", &res) <= 0) {
         perror("fscanf");
         return 0;
     }
@@ -57,7 +57,7 @@ static long long max_energy_range_uj(int package, int subzone)
         perror("fclose");
     }
 
-    return *value;
+    return res;
 }
 
 long long raplStart(int package, int subzone)
@@ -74,7 +74,7 @@ long long raplStop(int package, int subzone, long long energy_start)
     } else {
         // The accumulator overflowed
         long long accumulator_max = max_energy_range_uj(package, subzone);
-        return = energy_end + (accumulator_max - energy_start);
+        return energy_end + (accumulator_max - energy_start);
     }
 }
 
