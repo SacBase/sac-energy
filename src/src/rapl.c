@@ -19,6 +19,7 @@ static long long energy_uj(int package, int subzone)
         return 0;
     }
 
+    long long *value;
     if (fscanf(fp, "%lld", value) <= 0) {
         perror("fscanf");
         return 0;
@@ -28,7 +29,7 @@ static long long energy_uj(int package, int subzone)
         perror("fclose");
     }
 
-    return value;
+    return *value;
 }
 
 static long long max_energy_range_uj(int package, int subzone)
@@ -46,6 +47,7 @@ static long long max_energy_range_uj(int package, int subzone)
         return 0;
     }
 
+    long long *value;
     if (fscanf(fp, "%lld", value) <= 0) {
         perror("fscanf");
         return 0;
@@ -55,7 +57,7 @@ static long long max_energy_range_uj(int package, int subzone)
         perror("fclose");
     }
 
-    return value;
+    return *value;
 }
 
 long long raplStart(int package, int subzone)
