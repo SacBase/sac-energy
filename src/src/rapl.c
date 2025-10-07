@@ -6,7 +6,7 @@
 
 static long long energy_uj(int package, int subzone)
 {
-    char path[64];
+    char path[128];
     if (subzone < 0) {
         snprintf(path, sizeof(path), "/sys/class/powercap/intel-rapl/intel-rapl:%d/energy_uj", package);
     } else {
@@ -33,7 +33,7 @@ static long long energy_uj(int package, int subzone)
 
 static long long max_energy_range_uj(int package, int subzone)
 {
-    char path[64];
+    char path[128];
     if (subzone < 0) {
         snprintf(path, sizeof(path), "/sys/class/powercap/intel-rapl/intel-rapl:%d/max_energy_range_uj", package);
     } else {
