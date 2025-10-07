@@ -8,9 +8,9 @@ static long long energy_uj(int package, int subzone)
 {
     char path[64];
     if (subzone < 0) {
-        snprintf(path, sizeof(path), "/sys/class/powercap/intel-rapl:%d/energy_uj", package);
+        snprintf(path, sizeof(path), "/sys/class/powercap/intel-rapl/intel-rapl:%d/energy_uj", package);
     } else {
-        snprintf(path, sizeof(path), "/sys/class/powercap/intel-rapl:%d/intel-rapl:%d:%d/energy_uj", package, package, subzone);
+        snprintf(path, sizeof(path), "/sys/class/powercap/intel-rapl/intel-rapl:%d/intel-rapl:%d:%d/energy_uj", package, package, subzone);
     }
 
     FILE *fp = fopen(path, "r");
@@ -36,9 +36,9 @@ static long long max_energy_range_uj(int package, int subzone)
 {
     char path[64];
     if (subzone < 0) {
-        snprintf(path, sizeof(path), "/sys/class/powercap/intel-rapl:%d/max_energy_range_uj", package);
+        snprintf(path, sizeof(path), "/sys/class/powercap/intel-rapl/intel-rapl:%d/max_energy_range_uj", package);
     } else {
-        snprintf(path, sizeof(path), "/sys/class/powercap/intel-rapl:%d/intel-rapl:%d:%d/max_energy_range_uj", package, package, subzone);
+        snprintf(path, sizeof(path), "/sys/class/powercap/intel-rapl/intel-rapl:%d/intel-rapl:%d:%d/max_energy_range_uj", package, package, subzone);
     }
 
     FILE *fp = fopen(path, "r");
