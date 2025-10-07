@@ -15,7 +15,6 @@ static long long energy_uj(int package, int subzone)
 
     FILE *fp = fopen(path, "r");
     if (!fp) {
-        perror("popen");
         return 0;
     }
 
@@ -67,6 +66,10 @@ long long raplStart(int package, int subzone)
 
 long long raplStop(int package, int subzone, long long energy_start)
 {
+    if (energy_start == 0) {
+        return 0;
+    }
+
     long long energy_end = energy_uj(package, subzone);
 
     if (energy_end >= energy_start) {
