@@ -21,7 +21,7 @@ int SAC_temp_get(int zone)
         return 0;
     }
 
-    long long temp;
+    int temp;
     if (fscanf(fp, "%d", &temp) <= 0) {
         perror("fscanf");
         return 0;
