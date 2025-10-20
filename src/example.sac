@@ -7,6 +7,7 @@ int test()
     MTClock::touch();
     Rapl::touch();
     Perf::touch();
+    Temp::touch();
 
     return sum(iota([1000,500,100]));
 }
@@ -26,11 +27,12 @@ int main()
         energy00 = Rapl::tod(Rapl::raplStop(0, 0, rapl00));
         instructions, cycles, ref_cycles, bus_cycles, stalled_cycles, cache_misses, cache_ref = Perf::perfStop(
             instructions_fd, cycles_fd, ref_cycles_fd, bus_cycles_fd, stalled_cycles_fd, cache_misses_fd, cache_ref_fd);
+        temp = Temp::tod(Temp::getTemperature());
 
         threads = Rapl::numThreads();
         seconds = MTClock::timediff(sec1, nsec1, sec2, nsec2);
-        printf("%d threads, %fs, %fJ %fJ, %lu instructions, %lu cycles, %lu ref cycles, %lu bus cycles, %lu stalled cycles, %lu cache misses, %lu cache ref\n",
-            threads, seconds, energy0, energy00, instructions, cycles, ref_cycles, bus_cycles, stalled_cycles, cache_misses, cache_ref);
+        printf("%d threads, %fs, %fJ %fJ, %lu instructions, %lu cycles, %lu ref cycles, %lu bus cycles, %lu stalled cycles, %lu cache misses, %lu cache ref, %f C\n",
+            threads, seconds, energy0, energy00, instructions, cycles, ref_cycles, bus_cycles, stalled_cycles, cache_misses, cache_ref, temp);
     }
 
     return 0;
