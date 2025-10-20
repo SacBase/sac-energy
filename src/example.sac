@@ -27,7 +27,7 @@ int main()
         energy00 = Rapl::tod(Rapl::raplStop(0, 0, rapl00));
         instructions, cycles, ref_cycles, bus_cycles, stalled_cycles, cache_misses, cache_ref = Perf::perfStop(
             instructions_fd, cycles_fd, ref_cycles_fd, bus_cycles_fd, stalled_cycles_fd, cache_misses_fd, cache_ref_fd);
-        temp = Temp::tod(Temp::getTemperature());
+        temp = Temp::tod(Temp::getTemperature(0));
 
         threads = Rapl::numThreads();
         seconds = MTClock::timediff(sec1, nsec1, sec2, nsec2);
