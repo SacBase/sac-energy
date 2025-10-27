@@ -1,0 +1,24 @@
+#pragma safe
+
+class ControlFlow;
+
+external classtype;
+
+export all;
+
+objdef ControlFlow TheControlFlow = createControlFlow();
+
+external ControlFlow createControlFlow();
+    #pragma effect World::TheWorld
+    #pragma linkname "SAC_create_control_flow"
+    #pragma linkobj "src/control_flow.o"
+    #pragma linksign [1]
+
+external void touch(ControlFlow& obj);
+    #pragma linkname "SAC_touch_control_flow"
+    #pragma linkobj "src/control_flow.o"
+
+void touch()
+{
+    touch(TheControlFlow);
+}

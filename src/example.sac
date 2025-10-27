@@ -4,10 +4,7 @@ use StdIO: all;
 noinline
 int test()
 {
-    MTClock::touch();
-    Rapl::touch();
-    Perf::touch();
-    Temp::touch();
+    ControlFlow::touch();
 
     return sum(iota([1000,500,100]));
 }

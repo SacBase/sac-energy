@@ -1,47 +1,30 @@
 #pragma safe
 
-class Rapl;
+module Rapl;
 
-external classtype;
+use ControlFlow: { TheControlFlow };
 
 export all;
 
-objdef Rapl TheRaplObject = createRaplObject();
-
-external Rapl createRaplObject();
-    #pragma effect World::TheWorld
-    #pragma linkname "SAC_rapl_create"
-    #pragma linkobj "src/rapl.o"
-    #pragma linksign [1]
-
-external void touch(Rapl& obj);
-    #pragma linkname "SAC_rapl_touch"
-    #pragma linkobj "src/rapl.o"
-
 external longlong raplStart(int package, int subzone);
-    #pragma effect TheRaplObject
+    #pragma effect TheControlFlow
     #pragma linkobj "src/rapl.o"
     #pragma linksign [0,1,2]
 
 external longlong raplStop(int package, int subzone, longlong energyStart);
-    #pragma effect TheRaplObject
+    #pragma effect TheControlFlow
     #pragma linkobj "src/rapl.o"
     #pragma linksign [0,1,2,3]
 
 external int numThreads();
-    #pragma effect TheRaplObject
+    #pragma effect TheControlFlow
     #pragma linkobj "src/rapl.o"
 
 external longlong constraint_0_power_limit_uw();
-    #pragma effect TheRaplObject
+    #pragma effect TheControlFlow
     #pragma linkobj "src/rapl.o"
 
 double tod(longlong energy_uj)
 {
     return _div_SxS_(_tod_S_(energy_uj), 1e6d);
-}
-
-void touch()
-{
-    touch(TheRaplObject);
 }

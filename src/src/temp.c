@@ -1,16 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-void *SAC_temp_create(void)
-{
-    return (void*)0;
-}
-
-void SAC_temp_touch(void *obj)
-{
-    /* noop */
-}
-
 int SAC_temp_get(int zone)
 {
     char path[128];

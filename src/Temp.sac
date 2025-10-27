@@ -1,25 +1,13 @@
 #pragma safe
 
-class Temp;
+module Temp;
 
-external classtype;
+use ControlFlow: { TheControlFlow };
 
 export all;
 
-objdef Temp TheTempObject = createTempObject();
-
-external Temp createTempObject();
-    #pragma effect World::TheWorld
-    #pragma linkname "SAC_temp_create"
-    #pragma linkobj "src/temp.o"
-    #pragma linksign [1]
-
-external void touch(Temp& obj);
-    #pragma linkname "SAC_temp_touch"
-    #pragma linkobj "src/temp.o"
-
 external int getTemperature(int zone);
-    #pragma effect TheTempObject
+    #pragma effect TheControlFlow
     #pragma linkname "SAC_temp_get"
     #pragma linkobj "src/temp.o"
     #pragma linksign [0,1]
@@ -27,9 +15,4 @@ external int getTemperature(int zone);
 double tod(int temp)
 {
     return _div_SxS_(_tod_S_(temp), 1e3d);
-}
-
-void touch()
-{
-    touch(TheTempObject);
 }

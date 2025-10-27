@@ -5,6 +5,7 @@ ADD_CUSTOM_TARGET (${TARGET}-all-modules ALL)
 
 # C files
 SET (C_DEPS_SRC
+    src/control_flow.c
     src/ina.c
     src/perf.c
     src/rapl.c
@@ -13,6 +14,7 @@ SET (C_DEPS_SRC
 
 # SaC files
 SET (SAC_SRC
+    ControlFlow.sac
     Ina.sac
     Perf.sac
     Rapl.sac

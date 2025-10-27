@@ -1,9 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-#include "sac.h"
-#include "sacinterface.h"
-
 /**
  * The received json looks as follows:
  *
@@ -64,14 +61,4 @@ double inaStop(double start)
 {
     double end = read_energy_stats();
     return end - start;
-}
-
-void *SAC_ina_create(void)
-{
-    return (void*)0;
-}
-
-void SAC_ina_touch(void *obj)
-{
-    /* noop */
 }

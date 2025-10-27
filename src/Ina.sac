@@ -1,34 +1,17 @@
 #pragma safe
 
-class Ina;
+module Ina;
 
-external classtype;
+use ControlFlow: { TheControlFlow };
 
 export all;
 
-objdef Ina TheInaObject = createInaObject();
-
-external Ina createInaObject();
-    #pragma effect World::TheWorld
-    #pragma linkname "SAC_ina_create"
-    #pragma linkobj "src/ina.o"
-    #pragma linksign [1]
-
-external void touch(Ina& obj);
-    #pragma linkname "SAC_ina_touch"
-    #pragma linkobj "src/ina.o"
-
 external double inaStart();
-    #pragma effect TheInaObject
+    #pragma effect TheControlFlow
     #pragma linkobj "src/ina.o"
     #pragma linksign [0]
 
 external double inaStop(double start);
-    #pragma effect TheInaObject
+    #pragma effect TheControlFlow
     #pragma linkobj "src/ina.o"
     #pragma linksign [0,1]
-
-void touch()
-{
-    touch(TheInaObject);
-}

@@ -8,9 +8,6 @@
 #include <sys/ioctl.h>
 #include <stdint.h>
 
-#include "sac.h"
-#include "sacinterface.h"
-
 static long perf_event_open(struct perf_event_attr *hw_event, pid_t pid,
                             int cpu, int group_fd, unsigned long flags)
 {
@@ -99,14 +96,4 @@ void perfStop(unsigned long *out_instructions, unsigned long *out_cycles, unsign
     *out_stalled_cycles = perf_event_stop(stalled_cycles_fd);
     *out_cache_misses   = perf_event_stop(cache_misses_fd);
     *out_cache_ref      = perf_event_stop(cache_ref_fd);
-}
-
-void *SAC_perf_create(void)
-{
-    return (void*)0;
-}
-
-void SAC_perf_touch(void *obj)
-{
-    /* noop */
 }

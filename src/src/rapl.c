@@ -102,13 +102,3 @@ long long constraint_0_power_limit_uw(void)
 
     return value;
 }
-
-void *SAC_rapl_create(void)
-{
-    return (void*)0;
-}
-
-void SAC_rapl_touch(void *obj)
-{
-    /* noop */
-}
