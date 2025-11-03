@@ -81,9 +81,9 @@ void perfStart(int *out_instructions_fd, int *out_cycles_fd, int *out_ref_cycles
     *out_cycles_fd         = perf_event_create(PERF_COUNT_HW_CPU_CYCLES);
     *out_ref_cycles_fd     = perf_event_create(PERF_COUNT_HW_REF_CPU_CYCLES);
     *out_bus_cycles_fd     = perf_event_create(PERF_COUNT_HW_BUS_CYCLES);
-    *out_stalled_cycles_fd = perf_event_create(PERF_COUNT_HW_STALLED_CYCLES_BACKEND);
-    *out_cache_misses_fd   = perf_event_create(PERF_COUNT_HW_CACHE_MISSES);
-    *out_cache_ref_fd      = perf_event_create(PERF_COUNT_HW_CACHE_REFERENCES);
+    *out_stalled_cycles_fd = perf_event_create(PERF_COUNT_SW_TASK_CLOCK);
+    *out_cache_misses_fd   = perf_event_create(PERF_COUNT_HW_CACHE_L1D);
+    *out_cache_ref_fd      = perf_event_create(PERF_COUNT_HW_CACHE_LL);
 }
 
 void perfStop(unsigned long *out_instructions, unsigned long *out_cycles, unsigned long *out_ref_cycles, unsigned long *out_bus_cycles, unsigned long *out_stalled_cycles, unsigned long *out_cache_misses, unsigned long *out_cache_ref,
