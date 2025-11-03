@@ -14,12 +14,12 @@ static long perf_event_open(struct perf_event_attr *hw_event, pid_t pid,
     return syscall(__NR_perf_event_open, hw_event, pid, cpu, group_fd, flags);
 }
 
-static int perf_event_create(enum perf_hw_id config)
+static int perf_event_create(unsigned int type, unsigned long long config)
 {
     struct perf_event_attr pe;
     memset(&pe, 0, sizeof(struct perf_event_attr));
 
-    pe.type = PERF_TYPE_HARDWARE;
+    pe.type = type;
     pe.size = sizeof(struct perf_event_attr);
     pe.config = config;
     pe.disabled = 1;
@@ -77,13 +77,13 @@ static unsigned long perf_event_stop(int fd)
 
 void perfStart(int *out_instructions_fd, int *out_cycles_fd, int *out_ref_cycles_fd, int *out_bus_cycles_fd, int *out_stalled_cycles_fd, int *out_cache_misses_fd, int *out_cache_ref_fd)
 {
-    *out_instructions_fd   = perf_event_create(PERF_COUNT_HW_INSTRUCTIONS);
-    *out_cycles_fd         = perf_event_create(PERF_COUNT_HW_CPU_CYCLES);
-    *out_ref_cycles_fd     = perf_event_create(PERF_COUNT_HW_REF_CPU_CYCLES);
-    *out_bus_cycles_fd     = perf_event_create(PERF_COUNT_HW_BUS_CYCLES);
-    *out_stalled_cycles_fd = perf_event_create(PERF_COUNT_SW_TASK_CLOCK);
-    *out_cache_misses_fd   = perf_event_create(PERF_COUNT_HW_CACHE_L1D);
-    *out_cache_ref_fd      = perf_event_create(PERF_COUNT_HW_CACHE_LL);
+    *out_instructions_fd   = perf_event_create(PERF_TYPE_HARDWARE, PERF_COUNT_HW_INSTRUCTIONS);
+    *out_cycles_fd         = perf_event_create(PERF_TYPE_HARDWARE, PERF_COUNT_HW_CPU_CYCLES);
+    *out_ref_cycles_fd     = perf_event_create(PERF_TYPE_HARDWARE, PERF_COUNT_HW_REF_CPU_CYCLES);
+    *out_bus_cycles_fd     = perf_event_create(PERF_TYPE_HARDWARE, PERF_COUNT_HW_BUS_CYCLES);
+    *out_stalled_cycles_fd = perf_event_create(PERF_TYPE_SOFTWARE, PERF_COUNT_SW_TASK_CLOCK);
+    *out_cache_misses_fd   = perf_event_create(PERF_TYPE_HW_CACHE, PERF_COUNT_HW_CACHE_L1D);
+    *out_cache_ref_fd      = perf_event_create(PERF_TYPE_HW_CACHE, PERF_COUNT_HW_CACHE_LL);
 }
 
 void perfStop(unsigned long *out_instructions, unsigned long *out_cycles, unsigned long *out_ref_cycles, unsigned long *out_bus_cycles, unsigned long *out_stalled_cycles, unsigned long *out_cache_misses, unsigned long *out_cache_ref,
