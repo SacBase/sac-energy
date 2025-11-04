@@ -81,7 +81,7 @@ void perfStart(int *out_instructions_fd, int *out_cycles_fd, int *out_ref_cycles
     *out_cycles_fd         = perf_event_create(PERF_TYPE_HARDWARE, PERF_COUNT_HW_CPU_CYCLES);
     *out_ref_cycles_fd     = perf_event_create(PERF_TYPE_HARDWARE, PERF_COUNT_HW_REF_CPU_CYCLES);
     *out_bus_cycles_fd     = perf_event_create(PERF_TYPE_HARDWARE, PERF_COUNT_HW_BUS_CYCLES);
-    *out_stalled_cycles_fd = perf_event_create(PERF_TYPE_SOFTWARE, PERF_COUNT_SW_TASK_CLOCK);
+    *out_stalled_cycles_fd = perf_event_create(35, 0xff);
     *out_cache_misses_fd   = perf_event_create(PERF_TYPE_HW_CACHE, PERF_COUNT_HW_CACHE_L1D);
     *out_cache_ref_fd      = perf_event_create(PERF_TYPE_HW_CACHE, PERF_COUNT_HW_CACHE_LL);
 }
