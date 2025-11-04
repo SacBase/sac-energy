@@ -26,7 +26,9 @@ static int perf_event_create(unsigned int type, unsigned long long config)
     pe.exclude_kernel = 0;
     pe.exclude_hv = 0;
 
-    int fd = perf_event_open(&pe, 0, -1, -1, 0);
+    int fd = type == 35
+        ? perf_event_open(&pe, -1, 0, -1, 0)
+        : perf_event_open(&pe, 0, -1, -1, 0);
     if (fd == -1) {
         //perror("perf_event_open");
         return -1;
