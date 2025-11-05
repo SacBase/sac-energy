@@ -26,12 +26,12 @@ external int numThreads();
 
 longlong raplStart(int package)
 {
-    return raplStart(package, -1);
+    return raplStart(package, _sub_SxS_(0,1));
 }
 
 longlong raplStop(int package, longlong energyStart)
 {
-    return raplStop(package, -1, energyStart);
+    return raplStop(package, _sub_SxS_(0,1), energyStart);
 }
 
 double tod(longlong energy_uj)

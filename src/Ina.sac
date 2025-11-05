@@ -11,7 +11,7 @@ external double inaStart();
     #pragma linkobj "src/ina.o"
     #pragma linksign [0]
 
-external double inaStop(double start);
+external double inaStop(double energyStart);
     #pragma effect TheControlFlow
     #pragma linkobj "src/ina.o"
     #pragma linksign [0,1]
