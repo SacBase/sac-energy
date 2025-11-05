@@ -7,7 +7,6 @@ ADD_CUSTOM_TARGET (${TARGET}-all-modules ALL)
 SET (C_DEPS_SRC
     src/control_flow.c
     src/ina.c
-    src/perf.c
     src/rapl.c
     src/temp.c
 )
@@ -16,7 +15,6 @@ SET (C_DEPS_SRC
 SET (SAC_SRC
     ControlFlow.sac
     Ina.sac
-    Perf.sac
     Rapl.sac
     Temp.sac
 )
