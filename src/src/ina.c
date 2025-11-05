@@ -10,8 +10,7 @@ static double read_energy_stats(void)
 {
     const char *url = getenv("ENERGY_STATS");
     if (!url) {
-        fprintf(stderr, "ENERGY_STATS not set\n");
-        return -1.0f;
+        return 0.0;
     }
 
     char cmd[1024];
@@ -20,13 +19,13 @@ static double read_energy_stats(void)
     FILE *fp = popen(cmd, "r");
     if (!fp) {
         perror("popen");
-        return -1.0f;
+        return 0.0;
     }
 
     char buf[2048];
     double current, total, power;
     int measurements, steady_time;
-    double res = -1.0f;
+    double res = 0.0;
 
     if (fgets(buf, sizeof(buf), fp)) {
         int n = sscanf(buf,

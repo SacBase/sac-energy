@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-int SAC_temp_get(int zone)
+int getTemperature(int zone)
 {
     char path[128];
     snprintf(path, sizeof(path), "/sys/class/thermal/thermal_zone%d/temp", zone);

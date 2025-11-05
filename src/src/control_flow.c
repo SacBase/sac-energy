@@ -1,9 +1,9 @@
-void *SAC_create_control_flow(void)
+void *createControlFlow(void)
 {
     return (void*)0;
 }
 
-void SAC_touch_control_flow(void *obj)
+void touch(void *obj)
 {
     /* noop */
 }

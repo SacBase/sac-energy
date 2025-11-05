@@ -16,13 +16,23 @@ external longlong raplStop(int package, int subzone, longlong energyStart);
     #pragma linkobj "src/rapl.o"
     #pragma linksign [0,1,2,3]
 
+external longlong powerLimit();
+    #pragma effect TheControlFlow
+    #pragma linkobj "src/rapl.o"
+
 external int numThreads();
     #pragma effect TheControlFlow
     #pragma linkobj "src/rapl.o"
 
-external longlong constraint_0_power_limit_uw();
-    #pragma effect TheControlFlow
-    #pragma linkobj "src/rapl.o"
+longlong raplStart(int package)
+{
+    return raplStart(package, -1);
+}
+
+longlong raplStop(int package, longlong energyStart)
+{
+    return raplStop(package, -1, energyStart);
+}
 
 double tod(longlong energy_uj)
 {

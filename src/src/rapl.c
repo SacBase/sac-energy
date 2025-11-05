@@ -81,13 +81,7 @@ long long raplStop(int package, int subzone, long long energy_start)
     }
 }
 
-int numThreads(void)
-{
-    // Plus one for the queen
-    return SAC_MT_cnt_worker_bees + 1;
-}
-
-long long constraint_0_power_limit_uw(void)
+long long powerLimit(void)
 {
     char path[64] = "/sys/class/powercap/intel-rapl:0/constraint_0_power_limit_uw";
 
@@ -101,4 +95,10 @@ long long constraint_0_power_limit_uw(void)
     fclose(fp);
 
     return value;
+}
+
+int numThreads(void)
+{
+    // Plus one for the queen
+    return SAC_MT_cnt_worker_bees + 1;
 }
