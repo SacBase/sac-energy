@@ -64,7 +64,6 @@ FOREACH (name ${SAC_SRC})
     FILE (MAKE_DIRECTORY "${dir}")
 
     ADD_CUSTOM_TARGET (${TARGET}-module-${dst} DEPENDS "${mod}" "${tree}")
-    ADD_DEPENDENCIES (${TARGET}-all-modules ${TARGET}-module-${dst})
 
     ADD_CUSTOM_COMMAND (
         OUTPUT ${mod} ${tree}

@@ -10,9 +10,5 @@ build:
 	cmake -DSAC2C_EXEC=$(SAC2C) -DTARGETS=$(TARGETS) -B $(BUILD_DIR)
 	cmake --build $(BUILD_DIR)
 
-bin/example: build
-	mkdir -p bin
-	$(SAC2C) src/example.sac -o $@
-
 clean:
 	$(RM) -r $(BUILD_DIR)
