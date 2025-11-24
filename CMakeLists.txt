@@ -12,10 +12,19 @@ OPTION (BUILDGENERIC "Do not use architecture-specific optimisations" OFF)
 # Check whether sac2c is operational
 LIST (APPEND CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake-common")
 INCLUDE ("cmake-common/check-sac2c.cmake")
+INCLUDE ("cmake-common/check-sac2c-feature-support.cmake")
 INCLUDE ("cmake-common/misc-macros.cmake")
 
+# Check if sac2c suppports building generically
 IF (BUILDGENERIC)
-    LIST (APPEND SAC2C_CPP_INC "-generic")
+    CHECK_SAC2C_SUPPORT_FLAG ("generic" "-generic")
+    IF (HAVE_FLAG_generic)
+        LIST (APPEND SAC2C_CPP_INC "-generic")
+        MESSAGE (STATUS "Building with *no* system-specific optimisations")
+    ELSE ()
+        MESSAGE (STATUS "Generic-build disabled as sac2c does not support this")
+        SET (BUILDGENERIC OFF)
+    ENDIF ()
 ENDIF ()
 
 # For every target run CMakeLists.txt in src
