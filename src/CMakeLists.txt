@@ -43,6 +43,19 @@ ENDFOREACH ()
 # Make a directory for sac2c output
 FILE (MAKE_DIRECTORY "${DLL_BUILD_DIR}/${TARGET_ENV}/${SBI}")
 
+# This functions tries to match a module name with its stored path information
+# in a list. It returns on the first result, or returns empty.
+FUNCTION (MATCH_NAME_IN_LIST list name ret)
+    MESSAGE (DEBUG "Searching for ${name} in list")
+    FOREACH (item ${list})
+        IF ("${item}" MATCHES "${name}\.(sac|xsac)")
+            MESSAGE (DEBUG "Found a match: ${item}")
+            SET (${ret} ${item} PARENT_SCOPE)
+            BREAK ()
+        ENDIF ()
+    ENDFOREACH ()
+ENDFUNCTION ()
+
 # For every SaC file, compile Tree and Mod files.
 FOREACH (name ${SAC_SRC})
     SET (src "${CMAKE_CURRENT_SOURCE_DIR}/${name}")
@@ -53,17 +66,37 @@ FOREACH (name ${SAC_SRC})
     SET (mod "${DLL_BUILD_DIR}/${TARGET_ENV}/${SBI}/lib${dst}Mod${VARIANT}${MODEXT}")
     SET (tree "${DLL_BUILD_DIR}/tree/${TARGET_ENV}/${SBI}/lib${dst}Tree${VARIANT}${TREE_DLLEXT}")
 
-    RESOLVE_SAC_DEPS_AS_TARGETS ("${name}" "<TARGET>-module-<NAME>" target_list object_list source_list)
-    LIST (APPEND deps_list ${target_list} ${object_list} ${source_list})
-    MESSAGE (STATUS "Dependencies of ${name} are: ${deps_list}")
+    RESOLVE_SAC_DEPS_AS_TARGETS ("${name}" "<TARGET>-module-<NAME>" target_list obj_list src_list)
+    MESSAGE (DEBUG "Targets ${name}: ${target_list}")
+    MESSAGE (DEBUG "Objects ${name}: ${obj_list}")
+    MESSAGE (DEBUG "Sources ${name}: ${src_list}")
+
+    SET (src_deps)
+    FOREACH (src_name ${src_list})
+        MESSAGE (DEBUG "Searching for ${src_name} in source path list")
+        MATCH_NAME_IN_LIST ("${SAC_SRC}" "${src_name}" src_path)
+        IF (src_path)
+            LIST (APPEND src_deps "${CMAKE_CURRENT_SOURCE_DIR}/${src_path}")
+        ELSE ()
+            MESSAGE (STATUS "Unable to find path to ${src_name} in sources")
+        ENDIF ()
+    ENDFOREACH ()
+    LIST (APPEND deps_list ${src_deps} ${obj_list} ${target_list})
+    UNSET (src_deps)
+    UNSET (src_list)
+    UNSET (obj_list)
     UNSET (target_list)
-    UNSET (object_list)
-    UNSET (source_list)
+    MESSAGE (STATUS "Dependencies of ${name} are: ${deps_list}")
+    # The current system cannot find Stdlib files. This is a really ugly solution:
+    # we manually remove known Stdlib dependencies, and assume they exist.
+    # I don't know how to fix this...
+    LIST(FILTER deps_list EXCLUDE REGEX ".*World")
 
     # Make sure that we have the directory we are changing to.
     FILE (MAKE_DIRECTORY "${dir}")
 
     ADD_CUSTOM_TARGET (${TARGET}-module-${dst} DEPENDS "${mod}" "${tree}")
+    ADD_DEPENDENCIES (${TARGET}-all-modules ${TARGET}-module-${dst})
 
     ADD_CUSTOM_COMMAND (
         OUTPUT ${mod} ${tree}
