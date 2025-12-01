@@ -35,7 +35,11 @@ FOREACH (name ${C_DEPS_SRC})
         OUTPUT "${dst}"
         MAIN_DEPENDENCY "${src}"
         IMPLICIT_DEPENDS C "${src}"
-        COMMAND ${SAC2C} -v0 -noprelude -cc ccmod -o "${dst}" "${src}"
+        COMMAND
+            ${SAC2C} -Xp -I${CMAKE_CURRENT_SOURCE_DIR}/${dir}
+                    -Xp -I${CMAKE_CURRENT_BINARY_DIR}/${dir}
+                    ${SAC2C_CC_FLAGS}
+                    -v0 -noprelude -cc ccrmod -o "${dst}" "${src}"
         WORKING_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}/${dir}"
         COMMENT "Generating ${dst} from ${src} for target ${TARGET}")
 ENDFOREACH ()
@@ -101,7 +105,7 @@ FOREACH (name ${SAC_SRC})
 
     ADD_CUSTOM_COMMAND (
         OUTPUT ${mod} ${tree}
-        COMMAND ${SAC2C} -v0 -o ${DLL_BUILD_DIR} "${src}"
+        COMMAND ${SAC2C} -v0 ${SAC2C_CC_FLAGS} -o ${DLL_BUILD_DIR} "${src}"
         WORKING_DIRECTORY "${dir}"
         MAIN_DEPENDENCY "${src}"
         DEPENDS ${deps_list}
