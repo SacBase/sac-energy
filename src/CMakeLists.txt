@@ -70,6 +70,7 @@ FOREACH (name ${SAC_SRC})
     MESSAGE (DEBUG "Targets ${name}: ${target_list}")
     MESSAGE (DEBUG "Objects ${name}: ${obj_list}")
     MESSAGE (DEBUG "Sources ${name}: ${src_list}")
+    MESSAGE (STATUS "Computing dependencies of ${name}")
 
     SET (src_deps)
     FOREACH (src_name ${src_list})
